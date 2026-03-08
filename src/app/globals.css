@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf8f5; /* Warm off-white, like linen or jasmine rice */
+  --foreground: #3d4035; /* Deep olive green/slate */
 }
 
 @theme inline {
@@ -10,12 +10,28 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  /* Primary - Earthy Green (Chiang Mai Mountains) */
+  --color-primary-50: #f4faeb;
+  --color-primary-100: #e6f3d1;
+  --color-primary-200: #cce7a0;
+  --color-primary-500: #7eb34a;
+  --color-primary-600: #629135;
+  --color-primary-700: #496d29;
+  --color-primary-900: #2d451b;
+
+  /* Accent - Warm Terracotta/Wood (Lanna Architecture) */
+  --color-accent-50: #fdf8f4;
+  --color-accent-100: #faeee2;
+  --color-accent-500: #d0966a;
+  --color-accent-600: #b87b4f;
+  --color-accent-800: #855b3f;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1e221b; /* Dark moss green/slate */
+    --foreground: #f4f5f0; /* Soft off-white */
   }
 }
 
