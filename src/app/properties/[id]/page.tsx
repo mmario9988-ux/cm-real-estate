@@ -47,12 +47,12 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
       {/* Image Gallery Header */}
       <div className="w-full h-[50vh] md:h-[60vh] relative bg-primary-100 mt-0">
         <div className="absolute inset-0 bg-black/20 z-10"></div>
-        {images[0].startsWith("/") ? (
+        {images[0].startsWith("http") ? (
+          <Image src={images[0]} alt={property.title} fill className="object-cover" priority />
+        ) : (
           <div className="w-full h-full flex items-center justify-center bg-primary-200">
              <span className="text-primary-800/50">Property Image Placeholder</span>
           </div>
-        ) : (
-          <Image src={images[0]} alt={property.title} fill className="object-cover" priority />
         )}
       </div>
 

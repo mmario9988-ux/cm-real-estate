@@ -2,13 +2,27 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Save, ArrowLeft } from "lucide-react";
+import { Save } from "lucide-react";
 import Link from "next/link";
+import ImageUpload from "./ImageUpload";
 
 export default function PropertyForm({ initialData }: { initialData?: any }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isEditing = !!initialData;
+
+  // Parse initial images
+  let initialImages: string[] = [];
+  if (initialData?.images) {
+    try {
+      const parsed = JSON.parse(initialData.images);
+      if (Array.isArray(parsed)) {
+        initialImages = parsed.filter((url: string) => !url.startsWith("/"));
+      }
+    } catch (e) {}
+  }
+
+  const [uploadedImages, setUploadedImages] = useState<string[]>(initialImages);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,8 +39,11 @@ export default function PropertyForm({ initialData }: { initialData?: any }) {
       area: formData.get("area"),
       type: formData.get("type"),
       status: formData.get("status"),
-      // Mock images and features for simplicity
-      images: initialData?.images || JSON.stringify(["/placeholder-property.jpg"]),
+      images: JSON.stringify(
+        uploadedImages.length > 0
+          ? uploadedImages
+          : ["/placeholder-property.jpg"]
+      ),
       features: initialData?.features || JSON.stringify(["Balcony", "Garden", "Parking"]),
     };
 
@@ -107,6 +124,12 @@ export default function PropertyForm({ initialData }: { initialData?: any }) {
           <label htmlFor="area" className="block text-sm font-medium text-foreground/80 mb-2">Area (Sqm)</label>
           <input type="number" id="area" name="area" min="0" defaultValue={initialData?.area} className="w-full px-4 py-2 rounded-lg bg-background border border-primary-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all" />
         </div>
+      </div>
+
+      {/* Image Upload Section */}
+      <div className="pt-6 border-t border-primary-100">
+        <label className="block text-sm font-medium text-foreground/80 mb-3">Property Images</label>
+        <ImageUpload value={uploadedImages} onChange={setUploadedImages} />
       </div>
 
       <div className="flex gap-4 pt-6 border-t border-primary-100">

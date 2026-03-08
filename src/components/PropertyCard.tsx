@@ -58,19 +58,19 @@ export default function PropertyCard({ property }: PropertyProps) {
             </span>
           </div>
 
-          {/* Fallback image style since we mock it */}
-          <div className="absolute inset-0 bg-primary-100 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
-            {imageUrl.startsWith('/') ? (
-              <div className="w-full h-full bg-primary-200 dark:bg-primary-800 flex items-center justify-center text-primary-500/50">
-                <span className="text-sm">Property Image</span>
-              </div>
-            ) : (
+          {/* Property Image */}
+          <div className="absolute inset-0 bg-primary-100 group-hover:scale-105 transition-transform duration-500">
+            {imageUrl.startsWith('http') ? (
               <Image 
                 src={imageUrl} 
                 alt={property.title}
                 fill
                 className="object-cover"
               />
+            ) : (
+              <div className="w-full h-full bg-primary-200 dark:bg-primary-800 flex items-center justify-center text-primary-500/50">
+                <span className="text-sm">Property Image</span>
+              </div>
             )}
           </div>
         </div>
