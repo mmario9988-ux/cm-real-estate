@@ -11,9 +11,10 @@ export const metadata = {
 export default async function PropertiesPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const statusParam = searchParams.status as string | undefined;
+  const resolvedSearchParams = await searchParams;
+  const statusParam = resolvedSearchParams.status as string | undefined;
 
   // Build the query where clause
   const whereClause = statusParam ? { status: statusParam } : {};
