@@ -6,8 +6,16 @@ import prisma from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  // Fetch properties from database
-  const properties = await prisma.property.findMany({
+  // Fetch properties for sale
+  const saleProperties = await prisma.property.findMany({
+    where: { status: 'For Sale' },
+    take: 3,
+    orderBy: { createdAt: 'desc' },
+  });
+
+  // Fetch properties for rent
+  const rentProperties = await prisma.property.findMany({
+    where: { status: 'For Rent' },
     take: 3,
     orderBy: { createdAt: 'desc' },
   });
@@ -43,29 +51,55 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Featured Properties */}
+      {/* For Sale Properties */}
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12">
             <div>
-              <h2 className="text-3xl font-bold text-foreground mb-4">Featured Properties</h2>
-              <p className="text-foreground/70 max-w-2xl">Hand-picked selections representing the finest living experiences in Chiang Mai.</p>
+              <h2 className="text-3xl font-bold text-foreground mb-4">🏠 ขายบ้านเชียงใหม่ (For Sale)</h2>
+              <p className="text-foreground/70 max-w-2xl">บ้านและคอนโดคุณภาพเยี่ยม สำหรับซื้อเพื่ออยู่อาศัยหรือลงทุนในเชียงใหม่</p>
             </div>
             <Link href="/properties" className="text-primary-600 font-semibold hover:text-primary-700 mt-4 md:mt-0 flex items-center gap-1 group">
-              View All Listings <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              ดูทั้งหมด <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
-          {properties.length > 0 ? (
+          {saleProperties.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {properties.map(property => (
+              {saleProperties.map(property => (
                 <PropertyCard key={property.id} property={property} />
               ))}
             </div>
           ) : (
             <div className="text-center py-12 bg-primary-50 rounded-2xl border border-primary-100">
-              <p className="text-primary-600 mb-2">No properties listed yet.</p>
-              <p className="text-sm text-primary-900/60">Check back soon or visit the admin portal to add properties.</p>
+              <p className="text-primary-600 mb-2">ยังไม่มีรายการประกาศขาย</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* For Rent Properties */}
+      <section className="py-20 bg-primary-50 dark:bg-primary-900/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12">
+            <div>
+              <h2 className="text-3xl font-bold text-foreground mb-4">🔑 บ้านเช่าเชียงใหม่ (For Rent)</h2>
+              <p className="text-foreground/70 max-w-2xl">บ้านเช่า คอนโดให้เช่า สภาพสวยพร้อมอยู่ ทำเลดีทั่วเมืองเชียงใหม่</p>
+            </div>
+            <Link href="/properties" className="text-primary-600 font-semibold hover:text-primary-700 mt-4 md:mt-0 flex items-center gap-1 group">
+              ดูทั้งหมด <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          {rentProperties.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {rentProperties.map(property => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-white rounded-2xl border border-gray-200">
+              <p className="text-primary-600 mb-2">ยังไม่มีรายการให้เช่า</p>
             </div>
           )}
         </div>
