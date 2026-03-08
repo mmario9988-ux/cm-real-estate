@@ -57,7 +57,7 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
           <div className="lg:col-span-2 space-y-10">
             <div>
               <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm font-semibold">
+                <span className="bg-white text-gray-800 px-3 py-1 rounded-full text-sm font-semibold shadow-sm">
                   {property.type}
                 </span>
                 <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
