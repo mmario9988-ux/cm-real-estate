@@ -46,8 +46,8 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
 
   return (
     <div className="bg-background min-h-screen pb-20">
-      {/* Image Gallery Header */}
-      <div className="w-full h-[50vh] md:h-[60vh] relative bg-primary-100 mt-0">
+      {/* Hero Cover Image */}
+      <div className="w-full h-[40vh] md:h-[50vh] relative bg-primary-100 mt-0">
         <div className="absolute inset-0 bg-black/20 z-10"></div>
         {images[0].startsWith("http") ? (
           <Image src={images[0]} alt={property.title} fill className="object-cover" priority />
@@ -57,6 +57,25 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
           </div>
         )}
       </div>
+
+      {/* Image Gallery Grid */}
+      {images.length > 1 && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+          <h3 className="text-lg font-bold text-foreground mb-3">📸 รูปภาพทั้งหมด ({images.length} รูป)</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            {images.map((img, idx) => (
+              img.startsWith("http") && (
+                <div key={idx} className="relative aspect-video rounded-xl overflow-hidden border border-gray-200 hover:border-primary-500 transition-all hover:shadow-lg group">
+                  <Image src={img} alt={`${property.title} - ${idx + 1}`} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
+                  {idx === 0 && (
+                    <span className="absolute top-2 left-2 bg-primary-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">COVER</span>
+                  )}
+                </div>
+              )
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
