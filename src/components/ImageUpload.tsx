@@ -68,7 +68,7 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
           <button
             type="button"
             onClick={() => open()}
-            className="w-full border-2 border-dashed border-primary-300 hover:border-primary-500 rounded-xl p-8 flex flex-col items-center gap-3 text-foreground/60 hover:text-primary-600 transition-all hover:bg-primary-50/50 cursor-pointer"
+            className="w-full border-2 border-dashed border-gray-300 hover:border-primary-500 rounded-xl p-8 flex flex-col items-center gap-3 text-gray-500 hover:text-primary-600 transition-all hover:bg-primary-50/50 cursor-pointer"
           >
             <ImagePlus size={36} />
             <span className="text-sm font-medium">
