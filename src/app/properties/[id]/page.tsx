@@ -119,6 +119,94 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
               </div>
             </div>
 
+            {/* Facilities */}
+            <div>
+              <h2 className="text-2xl font-bold text-foreground mb-6">สิ่งอำนวยความสะดวก</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Furniture */}
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-primary-50 dark:bg-primary-900/30">
+                  <span className="text-2xl">🛋️</span>
+                  <div>
+                    <div className="text-sm text-foreground/60">เฟอร์นิเจอร์</div>
+                    <div className="font-semibold text-foreground">
+                      {property.furniture === 'full' ? 'มีครบ' : property.furniture === 'partial' ? 'มีบางส่วน' : 'ไม่มี'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Appliances */}
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-primary-50 dark:bg-primary-900/30">
+                  <span className="text-2xl">⚡</span>
+                  <div>
+                    <div className="text-sm text-foreground/60">เครื่องใช้ไฟฟ้า</div>
+                    <div className="font-semibold text-foreground">
+                      {property.appliances === 'full' ? 'มีครบ' : property.appliances === 'partial' ? 'มีบางส่วน' : 'ไม่มี'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* AC */}
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-primary-50 dark:bg-primary-900/30">
+                  <span className="text-2xl">❄️</span>
+                  <div>
+                    <div className="text-sm text-foreground/60">แอร์</div>
+                    <div className="font-semibold text-foreground">
+                      {property.airconCount > 0 ? `มี ${property.airconCount} เครื่อง` : 'ไม่มี'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Water Heater */}
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-primary-50 dark:bg-primary-900/30">
+                  <span className="text-2xl">🚿</span>
+                  <div>
+                    <div className="text-sm text-foreground/60">เครื่องทำน้ำอุ่น</div>
+                    <div className="font-semibold text-foreground">
+                      {property.waterHeaterCount > 0 ? `มี ${property.waterHeaterCount} เครื่อง` : 'ไม่มี'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Parking */}
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-primary-50 dark:bg-primary-900/30">
+                  <span className="text-2xl">🚗</span>
+                  <div>
+                    <div className="text-sm text-foreground/60">ที่จอดรถ</div>
+                    <div className="font-semibold text-foreground">
+                      {property.parkingCount > 0 ? `มี ${property.parkingCount} คัน` : 'ไม่มี'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Pets */}
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-primary-50 dark:bg-primary-900/30">
+                  <span className="text-2xl">🐾</span>
+                  <div>
+                    <div className="text-sm text-foreground/60">สัตว์เลี้ยง</div>
+                    <div className="font-semibold text-foreground">
+                      {property.petsAllowed > 0 ? `รับได้ ${property.petsAllowed} ตัว` : 'ไม่รับ'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Google Maps */}
+            {property.googleMapsUrl && (
+              <div>
+                <h2 className="text-2xl font-bold text-foreground mb-4">📍 ตำแหน่งที่ตั้ง</h2>
+                <a
+                  href={property.googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-xl transition-all shadow-sm"
+                >
+                  <MapPin size={18} />
+                  ดูใน Google Maps
+                </a>
+              </div>
+            )}
+
             {/* Features */}
             {features.length > 0 && (
               <div>

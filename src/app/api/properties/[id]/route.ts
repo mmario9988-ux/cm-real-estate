@@ -38,10 +38,14 @@ export async function PUT(
     const updateData = {
       ...body,
       // Ensure numeric fields remain numbers
-      ...(body.price && { price: Number(body.price) }),
-      ...(body.bedrooms && { bedrooms: Number(body.bedrooms) }),
-      ...(body.bathrooms && { bathrooms: Number(body.bathrooms) }),
-      ...(body.area && { area: Number(body.area) }),
+      ...(body.price !== undefined && { price: Number(body.price) }),
+      ...(body.bedrooms !== undefined && { bedrooms: Number(body.bedrooms) }),
+      ...(body.bathrooms !== undefined && { bathrooms: Number(body.bathrooms) }),
+      ...(body.area !== undefined && { area: body.area ? Number(body.area) : null }),
+      ...(body.airconCount !== undefined && { airconCount: Number(body.airconCount) }),
+      ...(body.waterHeaterCount !== undefined && { waterHeaterCount: Number(body.waterHeaterCount) }),
+      ...(body.parkingCount !== undefined && { parkingCount: Number(body.parkingCount) }),
+      ...(body.petsAllowed !== undefined && { petsAllowed: Number(body.petsAllowed) }),
     };
 
     const property = await prisma.property.update({ 

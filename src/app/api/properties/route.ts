@@ -33,7 +33,14 @@ export async function POST(req: Request) {
         type: body.type,
         status: body.status || "Available",
         images: body.images || "[]",
-        features: body.features || "[]"
+        features: body.features || "[]",
+        googleMapsUrl: body.googleMapsUrl || null,
+        furniture: body.furniture || "none",
+        appliances: body.appliances || "none",
+        airconCount: Number(body.airconCount) || 0,
+        waterHeaterCount: Number(body.waterHeaterCount) || 0,
+        parkingCount: Number(body.parkingCount) || 0,
+        petsAllowed: Number(body.petsAllowed) || 0,
       } 
     });
     return NextResponse.json(property, { status: 201 });
