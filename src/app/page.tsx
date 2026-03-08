@@ -59,7 +59,7 @@ export default async function Home() {
               <h2 className="text-3xl font-bold text-foreground mb-4">🔑 บ้านเช่าเชียงใหม่ (For Rent)</h2>
               <p className="text-foreground/70 max-w-2xl">บ้านเช่า คอนโดให้เช่า สภาพสวยพร้อมอยู่ ทำเลดีทั่วเมืองเชียงใหม่</p>
             </div>
-            <Link href="/properties" className="text-primary-600 font-semibold hover:text-primary-700 mt-4 md:mt-0 flex items-center gap-1 group">
+            <Link href="/properties?status=For+Rent" className="text-primary-600 font-semibold hover:text-primary-700 mt-4 md:mt-0 flex items-center gap-1 group">
               ดูทั้งหมด <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
@@ -86,7 +86,7 @@ export default async function Home() {
               <h2 className="text-3xl font-bold text-foreground mb-4">🏠 ขายบ้านเชียงใหม่ (For Sale)</h2>
               <p className="text-foreground/70 max-w-2xl">บ้านและคอนโดคุณภาพเยี่ยม สำหรับซื้อเพื่ออยู่อาศัยหรือลงทุนในเชียงใหม่</p>
             </div>
-            <Link href="/properties" className="text-primary-600 font-semibold hover:text-primary-700 mt-4 md:mt-0 flex items-center gap-1 group">
+            <Link href="/properties?status=For+Sale" className="text-primary-600 font-semibold hover:text-primary-700 mt-4 md:mt-0 flex items-center gap-1 group">
               ดูทั้งหมด <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>

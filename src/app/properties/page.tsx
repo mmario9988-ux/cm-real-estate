@@ -8,17 +8,39 @@ export const metadata = {
   description: "Browse our curated selection of properties in Chiang Mai.",
 };
 
-export default async function PropertiesPage() {
+export default async function PropertiesPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const statusParam = searchParams.status as string | undefined;
+
+  // Build the query where clause
+  const whereClause = statusParam ? { status: statusParam } : {};
+
   const properties = await prisma.property.findMany({
+    where: whereClause,
     orderBy: { createdAt: "desc" },
   });
+
+  // Dynamic titles based on status
+  let pageTitle = "Properties in Chiang Mai";
+  let pageDescription = "Explore our exclusive collection of houses, condos, and villas in Northern Thailand.";
+
+  if (statusParam === "For Sale") {
+    pageTitle = "🏠 ขายบ้านเชียงใหม่ (For Sale)";
+    pageDescription = "บ้านและคอนโดคุณภาพเยี่ยม สำหรับซื้อเพื่ออยู่อาศัยหรือลงทุนในเชียงใหม่";
+  } else if (statusParam === "For Rent") {
+    pageTitle = "🔑 บ้านเช่าเชียงใหม่ (For Rent)";
+    pageDescription = "บ้านเช่า คอนโดให้เช่า สภาพสวยพร้อมอยู่ ทำเลดีทั่วเมืองเชียงใหม่";
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-10">
-        <h1 className="text-4xl font-bold text-foreground mb-4">Properties in Chiang Mai</h1>
+        <h1 className="text-4xl font-bold text-foreground mb-4">{pageTitle}</h1>
         <p className="text-lg text-foreground/70 max-w-2xl">
-          Explore our exclusive collection of houses, condos, and villas in Northern Thailand.
+          {pageDescription}
         </p>
       </div>
 
@@ -30,8 +52,8 @@ export default async function PropertiesPage() {
         </div>
       ) : (
         <div className="text-center py-20 bg-primary-50 rounded-2xl border border-primary-100">
-          <h3 className="text-xl font-semibold text-primary-900 mb-2">No properties found</h3>
-          <p className="text-primary-900/60">We are currently updating our listings. Please check back later.</p>
+          <h3 className="text-xl font-semibold text-primary-900 mb-2">ยังไม่มีรายการในหมวดหมู่นี้</h3>
+          <p className="text-primary-900/60">เรากำลังอัปเดตข้อมูล โปรดกลับมาดูใหม่ภายหลัง</p>
         </div>
       )}
     </div>
