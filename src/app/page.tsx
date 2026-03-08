@@ -3,6 +3,8 @@ import { ArrowRight, Mountain, Sun, Home as HomeIcon } from "lucide-react";
 import PropertyCard from "@/components/PropertyCard";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   // Fetch properties from database
   const properties = await prisma.property.findMany({

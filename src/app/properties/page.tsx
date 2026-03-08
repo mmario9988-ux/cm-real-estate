@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import PropertyCard from "@/components/PropertyCard";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Properties | Chiang Mai Estates",
   description: "Browse our curated selection of properties in Chiang Mai.",

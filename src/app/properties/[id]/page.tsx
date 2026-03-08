@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { Bed, Bath, Square, MapPin, Check } from "lucide-react";
 import InquiryForm from "@/components/InquiryForm";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const property = await prisma.property.findUnique({
