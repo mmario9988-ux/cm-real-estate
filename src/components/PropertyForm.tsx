@@ -109,6 +109,7 @@ export default function PropertyForm({ initialData }: { initialData?: any }) {
             <label htmlFor="type" className={labelClass}>ประเภท *</label>
             <select id="type" name="type" required defaultValue={initialData?.type || "House"} aria-label="Property Type" className={inputClass}>
               <option value="House">บ้าน (House)</option>
+              <option value="Townhouse">ทาวน์เฮ้าส์ (Townhouse)</option>
               <option value="Condo">คอนโด (Condo)</option>
               <option value="Villa">วิลล่า (Villa)</option>
               <option value="Land">ที่ดิน (Land)</option>
@@ -119,9 +120,10 @@ export default function PropertyForm({ initialData }: { initialData?: any }) {
           <div>
             <label htmlFor="status" className={labelClass}>สถานะ *</label>
             <select id="status" name="status" required defaultValue={initialData?.status || "Available"} aria-label="Status" className={inputClass}>
-              <option value="Available">ว่าง (Available)</option>
+              <option value="For Sale">ขาย (For Sale)</option>
+              <option value="For Rent">ให้เช่า (For Rent)</option>
               <option value="Sold">ขายแล้ว (Sold)</option>
-              <option value="Rented">ให้เช่าแล้ว (Rented)</option>
+              <option value="Rented">ปล่อยเช่าแล้ว (Rented)</option>
             </select>
           </div>
         </div>

@@ -9,9 +9,9 @@ export default function NewPropertyPage() {
     <div>
       <div className="mb-8">
         <Link href="/admin/properties" className="text-primary-600 hover:text-primary-800 flex items-center gap-2 text-sm font-medium mb-4 transition-colors w-fit">
-          <ArrowLeft size={16} /> Back to Properties
+          <ArrowLeft size={16} /> กลับไปหน้ารายการ
         </Link>
-        <h1 className="text-3xl font-bold text-foreground">Add New Property</h1>
+        <h1 className="text-3xl font-bold text-gray-900">เพิ่มรายการใหม่ (Add New Property)</h1>
         <p className="text-foreground/70 text-sm mt-1">Create a new real estate listing.</p>
       </div>
 
