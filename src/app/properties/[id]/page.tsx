@@ -3,6 +3,7 @@ import Image from "next/image";
 import prisma from "@/lib/prisma";
 import { Bed, Bath, Square, MapPin, Check } from "lucide-react";
 import InquiryForm from "@/components/InquiryForm";
+import ImageGallery from "@/components/ImageGallery";
 
 export const dynamic = "force-dynamic";
 
@@ -46,59 +47,8 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
 
   return (
     <div className="bg-background min-h-screen pb-20">
-      {/* Professional Image Gallery - Bento Grid */}
-      <div className="max-w-7xl mx-auto px-0 md:px-6 lg:px-8 mt-0 md:mt-6">
-        {images.length >= 5 ? (
-          /* 5+ images: Bento Grid (1 large + 4 small) */
-          <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-1 md:gap-2 md:rounded-2xl overflow-hidden h-[40vh] md:h-[60vh]">
-            <div className="md:col-span-2 md:row-span-2 relative">
-              <Image src={images[0]} alt={property.title} fill className="object-cover" priority />
-            </div>
-            <div className="hidden md:block relative">
-              <Image src={images[1]} alt={`${property.title} 2`} fill className="object-cover" />
-            </div>
-            <div className="hidden md:block relative">
-              <Image src={images[2]} alt={`${property.title} 3`} fill className="object-cover" />
-            </div>
-            <div className="hidden md:block relative">
-              <Image src={images[3]} alt={`${property.title} 4`} fill className="object-cover" />
-            </div>
-            <div className="hidden md:block relative">
-              <Image src={images[4]} alt={`${property.title} 5`} fill className="object-cover" />
-              {images.length > 5 && (
-                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">+{images.length - 5} รูป</span>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : images.length >= 2 ? (
-          /* 2-4 images: Large + side */
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-2 md:rounded-2xl overflow-hidden h-[40vh] md:h-[55vh]">
-            <div className="md:col-span-2 relative">
-              <Image src={images[0]} alt={property.title} fill className="object-cover" priority />
-            </div>
-            <div className="hidden md:flex flex-col gap-1 md:gap-2">
-              {images.slice(1, 3).map((img, idx) => (
-                <div key={idx} className="relative flex-1">
-                  <Image src={img} alt={`${property.title} ${idx + 2}`} fill className="object-cover" />
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          /* 1 image: Full width */
-          <div className="relative h-[40vh] md:h-[50vh] md:rounded-2xl overflow-hidden">
-            {images[0].startsWith("http") ? (
-              <Image src={images[0]} alt={property.title} fill className="object-cover" priority />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-primary-200">
-                <span className="text-primary-800/50">Property Image Placeholder</span>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      {/* Image Gallery */}
+      <ImageGallery images={images} title={property.title} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
