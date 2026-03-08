@@ -43,7 +43,7 @@ export default async function AdminLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 bg-primary-50/30">
+      <main className="flex-1 flex flex-col min-w-0 bg-gray-50">
         <header className="bg-white border-b border-primary-100 px-8 py-4 flex items-center justify-between md:hidden">
             <h2 className="text-lg font-bold">Agent Portal</h2>
             <Link href="/api/auth/signout" className="text-sm text-red-500 font-medium">Sign Out</Link>
