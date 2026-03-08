@@ -61,9 +61,11 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                   {property.type}
                 </span>
                 <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                  property.status === 'Available' ? 'bg-primary-500 text-white' : 
+                  property.status === 'For Sale' ? 'bg-amber-500 text-white' : 
+                  property.status === 'For Rent' ? 'bg-blue-500 text-white' : 
                   property.status === 'Sold' ? 'bg-red-500 text-white' : 
-                  'bg-accent-500 text-white'
+                  property.status === 'Rented' ? 'bg-gray-500 text-white' : 
+                  'bg-primary-500 text-white'
                 }`}>
                   {property.status}
                 </span>

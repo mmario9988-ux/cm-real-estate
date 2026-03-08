@@ -43,9 +43,11 @@ export default function PropertyCard({ property }: PropertyProps) {
           {/* Status Badge */}
           <div className="absolute top-4 left-4 z-10">
             <span className={`px-3 py-1 rounded-full text-xs font-semibold shadow-md ${
-              property.status === 'Available' ? 'bg-primary-500 text-white' : 
+              property.status === 'For Sale' ? 'bg-amber-500 text-white' : 
+              property.status === 'For Rent' ? 'bg-blue-500 text-white' : 
               property.status === 'Sold' ? 'bg-red-500 text-white' : 
-              'bg-accent-500 text-white'
+              property.status === 'Rented' ? 'bg-gray-500 text-white' : 
+              'bg-primary-500 text-white'
             }`}>
               {property.status}
             </span>
