@@ -2,7 +2,8 @@
 
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
-import { ImagePlus, X } from "lucide-react";
+import { ImagePlus, X, GripVertical } from "lucide-react";
+import { useRef, useCallback } from "react";
 
 interface ImageUploadProps {
   value: string[];
@@ -10,14 +11,29 @@ interface ImageUploadProps {
 }
 
 export default function ImageUpload({ value, onChange }: ImageUploadProps) {
-  const handleUpload = (result: any) => {
+  // Use ref to avoid stale closure when multiple uploads fire quickly
+  const valueRef = useRef(value);
+  valueRef.current = value;
+
+  const handleUpload = useCallback((result: any) => {
     if (result?.info?.secure_url) {
-      onChange([...value, result.info.secure_url]);
+      const newUrls = [...valueRef.current, result.info.secure_url];
+      valueRef.current = newUrls;
+      onChange(newUrls);
     }
-  };
+  }, [onChange]);
 
   const handleRemove = (urlToRemove: string) => {
     onChange(value.filter((url) => url !== urlToRemove));
+  };
+
+  // Move image to first position (make it cover)
+  const makeCover = (index: number) => {
+    if (index === 0) return;
+    const newUrls = [...value];
+    const [moved] = newUrls.splice(index, 1);
+    newUrls.unshift(moved);
+    onChange(newUrls);
   };
 
   return (
@@ -27,8 +43,8 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
           {value.map((url, index) => (
             <div
-              key={index}
-              className="relative aspect-video rounded-xl overflow-hidden border-2 border-primary-200 group"
+              key={url}
+              className="relative aspect-video rounded-xl overflow-hidden border-2 border-gray-200 group"
             >
               <Image
                 src={url}
@@ -36,6 +52,7 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
                 fill
                 className="object-cover"
               />
+              {/* Remove button */}
               <button
                 type="button"
                 onClick={() => handleRemove(url)}
@@ -44,6 +61,18 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
               >
                 <X size={14} />
               </button>
+              {/* Make cover button (shown on non-cover images) */}
+              {index !== 0 && (
+                <button
+                  type="button"
+                  onClick={() => makeCover(index)}
+                  title="ตั้งเป็นรูปปก"
+                  className="absolute bottom-2 right-2 bg-black/70 hover:bg-black text-white text-[10px] font-bold px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  ตั้งเป็นปก
+                </button>
+              )}
+              {/* Cover badge */}
               {index === 0 && (
                 <span className="absolute bottom-2 left-2 bg-primary-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                   COVER
@@ -59,7 +88,8 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
         uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
         onSuccess={handleUpload}
         options={{
-          maxFiles: 10,
+          maxFiles: 20,
+          multiple: true,
           sources: ["local", "url", "camera"],
           resourceType: "image",
         }}
@@ -72,12 +102,12 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
           >
             <ImagePlus size={36} />
             <span className="text-sm font-medium">
-              Click to upload images
+              คลิกเพื่ออัปโหลดรูปภาพ
             </span>
             <span className="text-xs">
               {value.length > 0
-                ? `${value.length} image(s) uploaded — click to add more`
-                : "Supports JPG, PNG, WebP"}
+                ? `อัปโหลดแล้ว ${value.length} รูป — คลิกเพื่อเพิ่มอีก`
+                : "รองรับ JPG, PNG, WebP — ไม่จำกัดจำนวน"}
             </span>
           </button>
         )}
