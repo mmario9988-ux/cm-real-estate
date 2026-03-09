@@ -15,9 +15,25 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   if (!property) return { title: "Property Not Found" };
 
+  let images: string[] = [];
+  try { images = JSON.parse(property.images) || []; } catch(e) {}
+  const ogImage = images.length > 0 ? images[0] : "/hero-bg.jpg";
+
   return {
     title: `${property.title} | Chiang Mai Estates`,
     description: property.description.substring(0, 160) + "...",
+    openGraph: {
+      title: property.title,
+      description: property.description.substring(0, 160) + "...",
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: property.title,
+        }
+      ]
+    }
   };
 }
 

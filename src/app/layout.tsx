@@ -15,10 +15,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://cm-real-estate.vercel.app'),
   title: "บ้านเช่าเชียงใหม่",
   description: "เว็บไซต์รวมประกาศให้เช่าบ้าน คอนโด ที่ดิน ในเชียงใหม่",
   icons: {
     icon: '/logo.png',
+  },
+  openGraph: {
+    title: "บ้านเช่าเชียงใหม่",
+    description: "เว็บไซต์รวมประกาศให้เช่าบ้าน คอนโด ที่ดิน ในเชียงใหม่",
+    url: "/",
+    siteName: "บ้านเช่าเชียงใหม่",
+    images: [
+      {
+        url: "/hero-bg.jpg",
+        width: 1200,
+        height: 630,
+        alt: "บ้านเช่าเชียงใหม่",
+      },
+    ],
+    locale: "th_TH",
+    type: "website",
   },
 };
 
