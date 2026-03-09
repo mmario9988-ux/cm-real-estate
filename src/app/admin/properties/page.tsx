@@ -30,6 +30,7 @@ export default async function AdminPropertiesPage() {
                 <th scope="col" className="px-6 py-4 font-semibold">Title</th>
                 <th scope="col" className="px-6 py-4 font-semibold">Location</th>
                 <th scope="col" className="px-6 py-4 font-semibold">Price</th>
+                <th scope="col" className="px-6 py-4 font-semibold">Views</th>
                 <th scope="col" className="px-6 py-4 font-semibold">Status</th>
                 <th scope="col" className="px-6 py-4 font-semibold text-right">Actions</th>
               </tr>
@@ -41,6 +42,9 @@ export default async function AdminPropertiesPage() {
                   <td className="px-6 py-4 text-gray-600">{property.location}</td>
                   <td className="px-6 py-4 font-semibold text-primary-600">
                     ฿{property.price.toLocaleString()}
+                  </td>
+                  <td className="px-6 py-4 text-gray-500 font-medium">
+                    {property.viewCount}
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-md text-xs font-medium ${

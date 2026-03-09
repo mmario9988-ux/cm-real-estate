@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { Bed, Bath, Square, MapPin, Check } from "lucide-react";
 import InquiryForm from "@/components/InquiryForm";
 import ImageGallery from "@/components/ImageGallery";
+import ViewTracker from "@/components/ViewTracker";
 
 export const dynamic = "force-dynamic";
 
@@ -63,6 +64,8 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
 
   return (
     <div className="bg-background min-h-screen pb-20">
+      <ViewTracker propertyId={property.id} />
+      
       {/* Image Gallery */}
       <ImageGallery images={images} title={property.title} />
 
