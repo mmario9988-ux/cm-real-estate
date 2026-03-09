@@ -24,7 +24,7 @@ export default async function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative w-full bg-white flex flex-col mb-16">
+      <section className="relative w-full bg-white flex flex-col mb-0 md:mb-16">
         {/* Banner Banner */}
         <div className="relative h-[360px] md:h-[440px] w-full bg-primary-100">
           {/* Main Background Image */}
@@ -62,7 +62,7 @@ export default async function Home() {
       </section>
 
       {/* For Rent Properties */}
-      <section className="py-20 bg-background">
+      <section className="pt-4 pb-20 md:py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12">
             <div>
