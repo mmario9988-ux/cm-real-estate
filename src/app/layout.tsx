@@ -15,8 +15,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Chiang Mai Estates | Real Estate in Northern Thailand",
-  description: "Discover your perfect home in the Rose of the North. Premium property listings in Chiang Mai.",
+  title: "บ้านเช่าเชียงใหม่",
+  description: "เว็บไซต์รวมประกาศให้เช่าบ้าน คอนโด ที่ดิน ในเชียงใหม่",
+  icons: {
+    icon: '/logo.png',
+  },
 };
 
 export default function RootLayout({

@@ -15,9 +15,22 @@ export default async function PropertiesPage({
 }) {
   const resolvedSearchParams = await searchParams;
   const statusParam = resolvedSearchParams.status as string | undefined;
+  const searchQuery = resolvedSearchParams.q as string | undefined;
 
   // Build the query where clause
-  const whereClause = statusParam ? { status: statusParam } : {};
+  const whereClause: any = {};
+  
+  if (statusParam) {
+    whereClause.status = statusParam;
+  }
+
+  if (searchQuery) {
+    whereClause.OR = [
+      { title: { contains: searchQuery } },
+      { description: { contains: searchQuery } },
+      { location: { contains: searchQuery } },
+    ];
+  }
 
   const properties = await prisma.property.findMany({
     where: whereClause,
@@ -28,7 +41,10 @@ export default async function PropertiesPage({
   let pageTitle = "Properties in Chiang Mai";
   let pageDescription = "Explore our exclusive collection of houses, condos, and villas in Northern Thailand.";
 
-  if (statusParam === "For Sale") {
+  if (searchQuery) {
+    pageTitle = `ผลการค้นหาสำหรับ: "${searchQuery}"`;
+    pageDescription = `แสดงผลการค้นหาอสังหาริมทรัพย์ที่ตรงกับคำว่า "${searchQuery}"`;
+  } else if (statusParam === "For Sale") {
     pageTitle = "🏠 ขายบ้านเชียงใหม่ (For Sale)";
     pageDescription = "บ้านและคอนโดคุณภาพเยี่ยม สำหรับซื้อเพื่ออยู่อาศัยหรือลงทุนในเชียงใหม่";
   } else if (statusParam === "For Rent") {

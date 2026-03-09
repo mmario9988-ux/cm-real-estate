@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Mountain, Sun, Home as HomeIcon } from "lucide-react";
 import PropertyCard from "@/components/PropertyCard";
+import HeroSearchBox from "@/components/HeroSearchBox";
 import prisma from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -23,31 +24,40 @@ export default async function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-[80vh] flex items-center bg-primary-900 overflow-hidden">
-        {/* Abstract background elements in place of a real image */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-accent-500 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
-          <div className="absolute top-0 left-0 w-96 h-96 bg-primary-500 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-20 w-96 h-96 bg-emerald-500 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-4000"></div>
-        </div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="max-w-2xl bg-black/20 backdrop-blur-md p-8 md:p-12 rounded-3xl border border-white/10 shadow-2xl">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-              Find Your Peace in <span className="text-accent-500">Chiang Mai</span>
-            </h1>
-            <p className="text-lg md:text-xl text-primary-50 mb-8 leading-relaxed">
-              Discover properties that blend traditional Lanna charm with modern luxury, surrounded by the breathtaking mountains of northern Thailand.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/properties" className="bg-accent-500 hover:bg-accent-600 text-white px-8 py-3 rounded-lg font-semibold text-center transition-all duration-300 shadow-lg shadow-accent-500/30 flex items-center justify-center gap-2">
-                Browse Properties <ArrowRight size={18} />
-              </Link>
-              <Link href="/contact" className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-8 py-3 rounded-lg font-semibold text-center transition-all duration-300">
-                Contact an Agent
-              </Link>
+      <section className="relative w-full bg-white flex flex-col mb-16">
+        {/* Banner Banner */}
+        <div className="relative h-[360px] md:h-[440px] w-full bg-primary-100">
+          {/* Main Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-hero-pattern"
+          >
+            {/* Dark Overlay for better text/gradient visibility (Optional) */}
+            <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/40 to-transparent"></div>
+          </div>
+          
+          {/* Left Text / Graphic Content over Banner */}
+          <div className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
+            <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 max-w-2xl mt-[-60px]">
+              <div className="inline-flex flex-col">
+                <span className="text-primary-700 font-black text-6xl md:text-7xl tracking-tighter leading-none mb-1">
+                  บ้านเช่า
+                </span>
+                <span className="text-gray-900 font-black text-5xl md:text-6xl tracking-tight leading-none">
+                  เชียงใหม่
+                </span>
+              </div>
+              <div className="md:mt-4 max-w-[200px] md:max-w-xs">
+                <p className="text-primary-700 font-bold text-lg md:text-xl leading-snug">
+                  เว็บบ้านเช่าอันดับหนึ่งของเชียงใหม่
+                </p>
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* Floating Search Box */}
+        <div className="max-w-[800px] w-full mx-auto px-4 -mt-20 relative z-20">
+          <HeroSearchBox />
         </div>
       </section>
 
@@ -56,7 +66,7 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12">
             <div>
-              <h2 className="text-3xl font-bold text-foreground mb-4">🔑 บ้านเช่าเชียงใหม่ (For Rent)</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-4">บ้านเช่าเชียงใหม่</h2>
               <p className="text-foreground/70 max-w-2xl">บ้านเช่า คอนโดให้เช่า สภาพสวยพร้อมอยู่ ทำเลดีทั่วเมืองเชียงใหม่</p>
             </div>
             <Link href="/properties?status=For+Rent" className="text-primary-600 font-semibold hover:text-primary-700 mt-4 md:mt-0 flex items-center gap-1 group">
@@ -79,11 +89,11 @@ export default async function Home() {
       </section>
 
       {/* For Sale Properties */}
-      <section className="py-20 bg-primary-50 dark:bg-primary-900/10">
+      <section className="py-20 bg-gray-50 dark:bg-gray-900/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12">
             <div>
-              <h2 className="text-3xl font-bold text-foreground mb-4">🏠 ขายบ้านเชียงใหม่ (For Sale)</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-4">ขายบ้านเชียงใหม่</h2>
               <p className="text-foreground/70 max-w-2xl">บ้านและคอนโดคุณภาพเยี่ยม สำหรับซื้อเพื่ออยู่อาศัยหรือลงทุนในเชียงใหม่</p>
             </div>
             <Link href="/properties?status=For+Sale" className="text-primary-600 font-semibold hover:text-primary-700 mt-4 md:mt-0 flex items-center gap-1 group">
@@ -106,7 +116,7 @@ export default async function Home() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-20 bg-primary-50 dark:bg-primary-900/10">
+      <section className="py-20 bg-gray-50 dark:bg-gray-900/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-foreground mb-4">The Chiang Mai Estates Difference</h2>

@@ -30,15 +30,11 @@ export default function PropertyCard({ property }: PropertyProps) {
   }
 
   // Format price
-  const formattedPrice = new Intl.NumberFormat('th-TH', {
-    style: 'currency',
-    currency: 'THB',
-    maximumFractionDigits: 0
-  }).format(property.price);
+  const formattedPrice = `฿${property.price.toLocaleString('en-US')}`;
 
   return (
-    <Link href={`/properties/${property.id}`} className="group block h-full">
-      <div className="bg-white dark:bg-primary-900/30 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-primary-100 dark:border-primary-900 flex flex-col h-full transform group-hover:-translate-y-1">
+    <Link href={`/properties/${property.id}`} className="group block h-full" suppressHydrationWarning>
+      <div suppressHydrationWarning className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-primary-100 flex flex-col h-full transform group-hover:-translate-y-1">
         <div className="relative h-64 2xl:h-72 w-full overflow-hidden">
           {/* Status Badge */}
           <div className="absolute top-4 left-4 z-10">
@@ -70,7 +66,7 @@ export default function PropertyCard({ property }: PropertyProps) {
                 className="object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-primary-200 dark:bg-primary-800 flex items-center justify-center text-primary-500/50">
+              <div className="w-full h-full bg-primary-200 flex items-center justify-center text-primary-500/50">
                 <span className="text-sm">Property Image</span>
               </div>
             )}
@@ -89,20 +85,20 @@ export default function PropertyCard({ property }: PropertyProps) {
             <span className="truncate">{property.location}</span>
           </div>
 
-          <div className="text-2xl font-bold text-primary-600 dark:text-primary-500 mb-6">
+          <div className="text-2xl font-bold text-primary-600 mb-6">
             {formattedPrice}
           </div>
 
-          <div className="mt-auto pt-4 border-t border-primary-100 dark:border-primary-800/50 grid grid-cols-3 gap-2 text-foreground/70 text-sm">
-            <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-primary-50 dark:bg-primary-900/50">
+          <div className="mt-auto pt-4 border-t border-primary-100 grid grid-cols-3 gap-2 text-foreground/70 text-sm">
+            <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-primary-50">
               <Bed size={18} className="mb-1 text-primary-500" />
               <span className="font-semibold">{property.bedrooms}</span>
             </div>
-            <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-primary-50 dark:bg-primary-900/50">
+            <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-primary-50">
               <Bath size={18} className="mb-1 text-primary-500" />
               <span className="font-semibold">{property.bathrooms}</span>
             </div>
-            <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-primary-50 dark:bg-primary-900/50 text-center">
+            <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-primary-50 text-center">
               <Square size={18} className="mb-1 text-primary-500" />
               <span className="font-semibold">{property.area || '-'} <span className="text-[10px]">sqm</span></span>
             </div>

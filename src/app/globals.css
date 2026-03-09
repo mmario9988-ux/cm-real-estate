@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf8f5; /* Warm off-white, like linen or jasmine rice */
-  --foreground: #3d4035; /* Deep olive green/slate */
+  --background: #ffffff; /* White */
+  --foreground: #111827; /* Dark gray for better contrast with white */
 }
 
 @theme inline {
@@ -11,14 +11,14 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   
-  /* Primary - Earthy Green (Chiang Mai Mountains) */
-  --color-primary-50: #f4faeb;
-  --color-primary-100: #e6f3d1;
-  --color-primary-200: #cce7a0;
-  --color-primary-500: #7eb34a;
-  --color-primary-600: #629135;
-  --color-primary-700: #496d29;
-  --color-primary-900: #2d451b;
+  /* Primary - Red (DDproperty Theme) */
+  --color-primary-50: #fef2f2;
+  --color-primary-100: #fee2e2;
+  --color-primary-200: #fecaca;
+  --color-primary-500: #ef4444;
+  --color-primary-600: #dc2626;
+  --color-primary-700: #b91c1c;
+  --color-primary-900: #7f1d1d;
 
   /* Accent - Warm Terracotta/Wood (Lanna Architecture) */
   --color-accent-50: #fdf8f4;
@@ -28,15 +28,13 @@
   --color-accent-800: #855b3f;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1e221b; /* Dark moss green/slate */
-    --foreground: #f4f5f0; /* Soft off-white */
-  }
-}
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.bg-hero-pattern {
+  background-image: url('/hero-bg.jpg');
 }
