@@ -17,26 +17,33 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://cm-real-estate.vercel.app'),
-  title: "บ้านเช่าเชียงใหม่",
-  description: "เว็บไซต์รวมประกาศให้เช่าบ้าน คอนโด ที่ดิน ในเชียงใหม่",
+  title: {
+    default: "เชียงใหม่ เอสเตทส์ - บ้านเช่า คอนโด ขายบ้าน เชียงใหม่",
+    template: "%s | Chiang Mai Estates"
+  },
+  description: "ศูนย์รวมประกาศ ให้เช่าบ้าน คอนโด ขายบ้าน และที่ดิน ในเชียงใหม่ ทำเลดี ราคาคุ้มค่า พร้อมบริการดูแลครบวงจร",
+  keywords: ["บ้านเช่าเชียงใหม่", "คอนโดเชียงใหม่", "ขายบ้านเชียงใหม่", "ที่ดินเชียงใหม่", "Real Estate Chiang Mai", "Rent House Chiang Mai"],
   icons: {
     icon: '/logo.png',
   },
   openGraph: {
-    title: "บ้านเช่าเชียงใหม่",
-    description: "เว็บไซต์รวมประกาศให้เช่าบ้าน คอนโด ที่ดิน ในเชียงใหม่",
+    title: "เชียงใหม่ เอสเตทส์ - บริการด้านอสังหาริมทรัพย์ครบวงจร",
+    description: "รวมประกาศเช่าและขายบ้าน คอนโด ที่ดิน ในเชียงใหม่ ครบจบในที่เดียว",
     url: "/",
-    siteName: "บ้านเช่าเชียงใหม่",
+    siteName: "Chiang Mai Estates",
     images: [
       {
         url: "/hero-bg.jpg",
         width: 1200,
         height: 630,
-        alt: "บ้านเช่าเชียงใหม่",
+        alt: "Chiang Mai Estates - Real Estate Services",
       },
     ],
     locale: "th_TH",
     type: "website",
+  },
+  alternates: {
+    canonical: "/",
   },
 };
 

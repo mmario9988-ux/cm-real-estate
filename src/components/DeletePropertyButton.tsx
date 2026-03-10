@@ -27,11 +27,11 @@ export default function DeletePropertyButton({ id }: { id: string }) {
   };
 
   return (
-    <button 
+    <button
       onClick={handleDelete}
       disabled={isDeleting}
-      className="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition-colors disabled:opacity-50"
-      title="Delete property"
+      className="text-red-600 hover:text-white bg-red-50 hover:bg-red-600 p-3 rounded-2xl transition-all shadow-sm group/btn disabled:opacity-50"
+      title="Delete"
       aria-label="Delete property"
     >
       <Trash2 size={18} />

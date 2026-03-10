@@ -5,6 +5,7 @@ import { Bed, Bath, Square, MapPin, Check } from "lucide-react";
 import InquiryForm from "@/components/InquiryForm";
 import ImageGallery from "@/components/ImageGallery";
 import ViewTracker from "@/components/ViewTracker";
+import JsonLd from "@/components/JsonLd";
 
 export const dynamic = "force-dynamic";
 
@@ -16,15 +17,24 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   if (!property) return { title: "Property Not Found" };
 
+  const formattedPrice = new Intl.NumberFormat("th-TH", {
+    style: "currency",
+    currency: "THB",
+    maximumFractionDigits: 0
+  }).format(property.price);
+
   let images: string[] = [];
   try { images = JSON.parse(property.images) || []; } catch(e) {}
   const ogImage = images.length > 0 ? images[0] : "/hero-bg.jpg";
 
   return {
-    title: `${property.title} | Chiang Mai Estates`,
-    description: property.description.substring(0, 160) + "...",
+    title: `${property.title} - ${formattedPrice} | ${property.location}`,
+    description: `${property.title} ราคา ${formattedPrice} ตั้งอยู่ที่ ${property.location}. ${property.description.substring(0, 120)}...`,
+    alternates: {
+      canonical: `/properties/${resolvedParams.id}`,
+    },
     openGraph: {
-      title: property.title,
+      title: `${property.title} - ${formattedPrice}`,
       description: property.description.substring(0, 160) + "...",
       images: [
         {
@@ -62,8 +72,30 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
     maximumFractionDigits: 0
   }).format(property.price);
 
+  const jsonLdData = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    "name": property.title,
+    "description": property.description,
+    "url": `https://cm-real-estate.vercel.app/properties/${property.id}`,
+    "image": images,
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": property.location,
+      "addressRegion": "Chiang Mai",
+      "addressCountry": "TH"
+    },
+    "offer": {
+      "@type": "Offer",
+      "price": property.price,
+      "priceCurrency": "THB",
+      "availability": property.status === "Available" ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+    }
+  };
+
   return (
     <div className="bg-background min-h-screen pb-20">
+      <JsonLd data={jsonLdData} />
       <ViewTracker propertyId={property.id} />
       
       {/* Image Gallery */}

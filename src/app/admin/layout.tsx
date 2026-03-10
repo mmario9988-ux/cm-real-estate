@@ -17,26 +17,37 @@ export default async function AdminLayout({
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
-      <aside className="w-64 bg-primary-900 text-white flex-shrink-0 flex flex-col hidden md:flex">
-        <div className="p-6">
-          <h2 className="text-xl font-bold tracking-tight text-white mb-2">Agent Portal</h2>
-          <p className="text-primary-300 text-sm truncate">{session.user.email}</p>
+      <aside className="w-68 bg-white border-r border-primary-100 text-foreground flex-shrink-0 flex flex-col hidden md:flex">
+        <div className="p-8 pb-4">
+          <Link href="/" className="flex items-center gap-2 group mb-2">
+            <div className="bg-primary-600 p-2 rounded-xl group-hover:scale-110 transition-transform">
+              <Home className="text-white" size={20} />
+            </div>
+            <span className="text-xl font-bold tracking-tight text-primary-900">Agent Portal</span>
+          </Link>
+          <p className="text-primary-600/60 text-xs font-semibold uppercase tracking-widest px-1">{session.user.name || 'Admin User'}</p>
         </div>
         
-        <nav className="flex-1 px-4 space-y-2 mt-8">
-          <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-primary-800 transition-colors">
+        <nav className="flex-1 px-4 space-y-1.5 mt-6">
+          <Link href="/admin" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium hover:bg-primary-50 hover:text-primary-700`}>
             <LayoutDashboard size={20} /> Dashboard
           </Link>
-          <Link href="/admin/properties" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-primary-800 transition-colors">
+          <Link href="/admin/properties" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium hover:bg-primary-50 hover:text-primary-700`}>
             <Home size={20} /> Properties
           </Link>
-          <Link href="/admin/inquiries" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-primary-800 transition-colors">
+          <Link href="/admin/inquiries" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium hover:bg-primary-50 hover:text-primary-700`}>
             <MessageSquare size={20} /> Inquiries
           </Link>
         </nav>
         
-        <div className="p-4 border-t border-primary-800 mt-auto">
-          <Link href="/api/auth/signout" className="flex items-center gap-3 px-4 py-3 text-red-300 hover:text-red-200 hover:bg-red-900/30 rounded-lg transition-colors w-full">
+        <div className="p-4 border-t border-primary-50 mt-auto">
+          <div className="bg-primary-50 rounded-2xl p-4 mb-4">
+             <p className="text-xs text-primary-700/70 font-medium mb-1 truncate">{session.user.email}</p>
+             <div className="w-full h-1 bg-primary-100 rounded-full overflow-hidden">
+                <div className="w-3/4 h-full bg-primary-500"></div>
+             </div>
+          </div>
+          <Link href="/api/auth/signout" className="flex items-center gap-3 px-4 py-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all font-semibold w-full">
             <LogOut size={20} /> Sign Out
           </Link>
         </div>
