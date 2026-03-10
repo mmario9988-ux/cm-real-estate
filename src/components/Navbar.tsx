@@ -40,7 +40,7 @@ export default function Navbar() {
               </svg>
               <div className="flex flex-col">
                 <span className="text-xl font-bold text-gray-900 leading-tight">บ้านเช่าเชียงใหม่</span>
-                <span className="text-[10px] text-gray-500 font-medium">Power By CM DIGITAL MEDIA</span>
+                <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">By CM DIGITAL MEDIA</span>
               </div>
             </Link>
 

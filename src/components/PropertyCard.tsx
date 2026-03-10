@@ -100,7 +100,7 @@ export default function PropertyCard({ property }: PropertyProps) {
             </div>
             <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-primary-50 text-center">
               <Square size={18} className="mb-1 text-primary-500" />
-              <span className="font-semibold">{property.area || '-'} <span className="text-[10px]">sqm</span></span>
+              <span className="font-semibold">{property.area || '-'} <span className="text-xs font-medium">sqm</span></span>
             </div>
           </div>
         </div>

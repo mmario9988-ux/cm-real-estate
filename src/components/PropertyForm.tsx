@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Save, MapPin, Sofa, Zap, Wind, Droplets, Car, PawPrint } from "lucide-react";
+import { Save, MapPin, Sofa, Zap, Wind, Droplets, Car, PawPrint, Info, Ruler, Layout, ArrowLeft, Loader2, Banknote, Bed } from "lucide-react";
 import Link from "next/link";
 import ImageUpload from "./ImageUpload";
 
@@ -74,168 +74,220 @@ export default function PropertyForm({ initialData }: { initialData?: any }) {
     }
   };
 
-  const inputClass = "w-full px-4 py-2.5 rounded-lg bg-white text-gray-900 border border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all placeholder:text-gray-400";
-  const labelClass = "block text-sm font-semibold text-gray-700 mb-2";
-  const sectionTitleClass = "text-lg font-bold text-gray-800 mb-4 flex items-center gap-2";
+  const inputClass = "w-full px-5 py-3.5 rounded-2xl bg-primary-50/30 text-primary-950 border border-primary-100 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all placeholder:text-primary-300 font-medium text-sm lg:text-base";
+  const labelClass = "text-xs font-bold uppercase tracking-wider text-primary-400 ml-1 mb-2 block";
+  const sectionCardClass = "bg-white p-8 lg:p-10 rounded-[40px] border border-primary-100 shadow-sm space-y-8";
+  const sectionTitleClass = "text-xl font-bold text-primary-950 flex items-center gap-3 mb-2";
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 max-w-4xl space-y-8">
+    <form onSubmit={handleSubmit} className="max-w-5xl mx-auto space-y-10 pb-20">
       
+      {/* Header Info */}
+       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+        <div>
+          <div className="flex items-center gap-2 text-primary-600 font-black uppercase tracking-widest text-[10px] mb-2">
+             <div className="w-8 h-[2px] bg-primary-600"></div>
+             Publish Listing
+          </div>
+          <h1 className="text-4xl font-bold text-primary-950 tracking-tight">
+             {isEditing ? "แก้ไขประกาศ" : "สร้างประกาศใหม่"}
+          </h1>
+        </div>
+        <Link href="/admin/properties" className="flex items-center gap-2 text-primary-400 hover:text-primary-900 font-black uppercase tracking-widest text-[10px] bg-white px-6 py-3.5 rounded-2xl border border-primary-50 transition-all shadow-sm">
+           <ArrowLeft size={16} /> Back to Directory
+        </Link>
+      </div>
+
       {/* === Basic Info === */}
-      <div>
-        <h3 className={sectionTitleClass}>📋 ข้อมูลทั่วไป</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className={sectionCardClass}>
+        <div>
+          <h3 className={sectionTitleClass}><Info size={22} className="text-primary-600" /> ข้อมูลทั่วไป</h3>
+          <p className="text-primary-900/40 text-sm font-bold ml-9">Essential details about the property listing.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="md:col-span-2">
-            <label htmlFor="title" className={labelClass}>ชื่อประกาศ *</label>
-            <input type="text" id="title" name="title" required defaultValue={initialData?.title} placeholder="e.g. Modern Villa in Chiang Mai" className={inputClass} />
+            <label htmlFor="title" className={labelClass}>Property Title *</label>
+            <input type="text" id="title" name="title" required defaultValue={initialData?.title} placeholder="e.g. Modern Minimalist Villa in Mae Rim" className={inputClass} />
           </div>
 
           <div className="md:col-span-2">
-            <label htmlFor="description" className={labelClass}>รายละเอียด *</label>
-            <textarea id="description" name="description" required rows={4} defaultValue={initialData?.description} placeholder="อธิบายรายละเอียดของทรัพย์สิน..." className={`${inputClass} resize-none`}></textarea>
+            <label htmlFor="description" className={labelClass}>Detailed Description *</label>
+            <textarea id="description" name="description" required rows={5} defaultValue={initialData?.description} placeholder="Describe the property's unique selling points, surroundings, and amenities..." className={`${inputClass} resize-none`}></textarea>
           </div>
 
-          <div>
-            <label htmlFor="price" className={labelClass}>ราคา (บาท) *</label>
-            <input type="number" id="price" name="price" required min="0" defaultValue={initialData?.price} placeholder="e.g. 5000000" className={inputClass} />
+          <div className="relative group">
+            <label htmlFor="price" className={labelClass}>Listing Price (THB) *</label>
+            <div className="relative">
+               <Banknote size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-primary-200 group-focus-within:text-primary-600 transition-colors" />
+               <input type="number" id="price" name="price" required min="0" defaultValue={initialData?.price} placeholder="e.g. 5500000" className={`${inputClass} pl-12`} />
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="location" className={labelClass}>ที่ตั้ง *</label>
-            <input type="text" id="location" name="location" required defaultValue={initialData?.location} placeholder="e.g. Nimman, Chiang Mai" className={inputClass} />
+          <div className="relative group">
+            <label htmlFor="location" className={labelClass}>Property Location *</label>
+            <div className="relative">
+               <MapPin size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-primary-200 group-focus-within:text-primary-600 transition-colors" />
+               <input type="text" id="location" name="location" required defaultValue={initialData?.location} placeholder="e.g. Nimman, Chiang Mai" className={`${inputClass} pl-12`} />
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="type" className={labelClass}>ประเภท *</label>
+          <div className="relative group">
+            <label htmlFor="type" className={labelClass}>Property Type *</label>
             <select id="type" name="type" required defaultValue={initialData?.type || "House"} aria-label="Property Type" className={inputClass}>
-              <option value="House">บ้าน (House)</option>
-              <option value="Townhouse">ทาวน์เฮ้าส์ (Townhouse)</option>
+              <option value="House">บ้านเดี่ยว (House)</option>
+              <option value="Townhouse">ทาวน์โฮม (Townhouse)</option>
               <option value="Condo">คอนโด (Condo)</option>
               <option value="Villa">วิลล่า (Villa)</option>
               <option value="Land">ที่ดิน (Land)</option>
-              <option value="Commercial">พาณิชย์ (Commercial)</option>
+              <option value="Commercial">อาคารพาณิชย์ (Commercial)</option>
             </select>
           </div>
 
-          <div>
-            <label htmlFor="status" className={labelClass}>สถานะ *</label>
-            <select id="status" name="status" required defaultValue={initialData?.status || "Available"} aria-label="Status" className={inputClass}>
-              <option value="For Sale">ขาย (For Sale)</option>
-              <option value="For Rent">ให้เช่า (For Rent)</option>
-              <option value="Sold">ขายแล้ว (Sold)</option>
-              <option value="Rented">ปล่อยเช่าแล้ว (Rented)</option>
+          <div className="relative group">
+            <label htmlFor="status" className={labelClass}>Listing Status *</label>
+            <select id="status" name="status" required defaultValue={initialData?.status || "For Sale"} aria-label="Status" className={inputClass}>
+              <option value="For Sale">🏡 สำหรับขาย (For Sale)</option>
+              <option value="For Rent">🔑 สำหรับเช่า (For Rent)</option>
+              <option value="Sold">🔴 ขายแล้ว (Sold)</option>
+              <option value="Rented">🔵 เช่าแล้ว (Rented)</option>
             </select>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* === Room & Size === */}
-      <div className="pt-6 border-t border-gray-200">
-        <h3 className={sectionTitleClass}>🏠 ขนาดและห้อง</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <label htmlFor="bedrooms" className={labelClass}>ห้องนอน *</label>
-            <input type="number" id="bedrooms" name="bedrooms" required min="0" defaultValue={initialData?.bedrooms || 0} className={inputClass} />
+      <section className={sectionCardClass}>
+        <div>
+          <h3 className={sectionTitleClass}><Layout size={22} className="text-primary-600" /> ขนาดและพื้นที่</h3>
+          <p className="text-primary-900/40 text-sm font-bold ml-9">Layout specifications and measurement details.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="relative group">
+            <label htmlFor="bedrooms" className={labelClass}>Bedrooms *</label>
+            <div className="relative">
+               <Bed size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-primary-200 group-focus-within:text-primary-600 transition-colors" />
+               <input type="number" id="bedrooms" name="bedrooms" required min="0" defaultValue={initialData?.bedrooms || 0} className={`${inputClass} pl-12`} />
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="bathrooms" className={labelClass}>ห้องน้ำ *</label>
-            <input type="number" id="bathrooms" name="bathrooms" required min="0" defaultValue={initialData?.bathrooms || 0} className={inputClass} />
+          <div className="relative group">
+            <label htmlFor="bathrooms" className={labelClass}>Bathrooms *</label>
+            <div className="relative">
+               <Droplets size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-primary-200 group-focus-within:text-primary-600 transition-colors" />
+               <input type="number" id="bathrooms" name="bathrooms" required min="0" defaultValue={initialData?.bathrooms || 0} className={`${inputClass} pl-12`} />
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="area" className={labelClass}>พื้นที่ (ตร.ม.)</label>
-            <input type="number" id="area" name="area" min="0" defaultValue={initialData?.area} placeholder="e.g. 250" className={inputClass} />
+          <div className="relative group">
+            <label htmlFor="area" className={labelClass}>Living Area (SQM)</label>
+            <div className="relative">
+               <Ruler size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-primary-200 group-focus-within:text-primary-600 transition-colors" />
+               <input type="number" id="area" name="area" min="0" defaultValue={initialData?.area} placeholder="e.g. 180" className={`${inputClass} pl-12`} />
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* === Facilities === */}
-      <div className="pt-6 border-t border-gray-200">
-        <h3 className={sectionTitleClass}>🛋️ สิ่งอำนวยความสะดวก</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="furniture" className={labelClass}>
-              <span className="flex items-center gap-2"><Sofa size={16} className="text-primary-600" /> เฟอร์นิเจอร์</span>
-            </label>
+      <section className={sectionCardClass}>
+        <div>
+          <h3 className={sectionTitleClass}><Sofa size={22} className="text-primary-600" /> สิ่งอำนวยความสะดวก</h3>
+          <p className="text-primary-900/40 text-sm font-bold ml-9">Furniture, appliances, and utility counts.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-2">
+            <label htmlFor="furniture" className={labelClass}>เฟอร์นิเจอร์ (Furniture)</label>
             <select id="furniture" name="furniture" defaultValue={initialData?.furniture || "none"} className={inputClass}>
-              <option value="full">มีครบ</option>
-              <option value="partial">มีบางส่วน</option>
-              <option value="none">ไม่มี</option>
+              <option value="full">มีเฟอร์นิเจอร์ครบ (Fully Furnished)</option>
+              <option value="partial">มีบางส่วน (Partially Furnished)</option>
+              <option value="none">ไม่มี (Unfurnished)</option>
             </select>
           </div>
 
-          <div>
-            <label htmlFor="appliances" className={labelClass}>
-              <span className="flex items-center gap-2"><Zap size={16} className="text-primary-600" /> เครื่องใช้ไฟฟ้า</span>
-            </label>
+          <div className="space-y-2">
+            <label htmlFor="appliances" className={labelClass}>เครื่องใช้ไฟฟ้า (Appliances)</label>
             <select id="appliances" name="appliances" defaultValue={initialData?.appliances || "none"} className={inputClass}>
-              <option value="full">มีครบ</option>
-              <option value="partial">มีบางส่วน</option>
-              <option value="none">ไม่มี</option>
+              <option value="full">มีครบ (Full Appliances)</option>
+              <option value="partial">มีบางส่วน (Partial)</option>
+              <option value="none">ไม่มี (None)</option>
             </select>
           </div>
 
-          <div>
-            <label htmlFor="airconCount" className={labelClass}>
-              <span className="flex items-center gap-2"><Wind size={16} className="text-primary-600" /> แอร์ (จำนวน)</span>
-            </label>
-            <input type="number" id="airconCount" name="airconCount" min="0" defaultValue={initialData?.airconCount || 0} className={inputClass} />
-            <p className="text-xs text-gray-400 mt-1">ใส่ 0 = ไม่มี</p>
+          <div className="relative group">
+            <label htmlFor="airconCount" className={labelClass}>Air Conditioners (Units)</label>
+            <div className="relative flex items-center">
+               <input type="number" id="airconCount" name="airconCount" min="0" defaultValue={initialData?.airconCount || 0} className={inputClass} />
+               <Wind size={18} className="absolute right-5 text-primary-200" />
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="waterHeaterCount" className={labelClass}>
-              <span className="flex items-center gap-2"><Droplets size={16} className="text-primary-600" /> เครื่องทำน้ำอุ่น (จำนวน)</span>
-            </label>
-            <input type="number" id="waterHeaterCount" name="waterHeaterCount" min="0" defaultValue={initialData?.waterHeaterCount || 0} className={inputClass} />
-            <p className="text-xs text-gray-400 mt-1">ใส่ 0 = ไม่มี</p>
+          <div className="relative group">
+            <label htmlFor="waterHeaterCount" className={labelClass}>Water Heaters (Units)</label>
+            <div className="relative flex items-center">
+               <input type="number" id="waterHeaterCount" name="waterHeaterCount" min="0" defaultValue={initialData?.waterHeaterCount || 0} className={inputClass} />
+               <Droplets size={18} className="absolute right-5 text-primary-200" />
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="parkingCount" className={labelClass}>
-              <span className="flex items-center gap-2"><Car size={16} className="text-primary-600" /> ที่จอดรถ (จำนวน)</span>
-            </label>
-            <input type="number" id="parkingCount" name="parkingCount" min="0" defaultValue={initialData?.parkingCount || 0} className={inputClass} />
-            <p className="text-xs text-gray-400 mt-1">ใส่ 0 = ไม่มี</p>
+          <div className="relative group">
+            <label htmlFor="parkingCount" className={labelClass}>Parking Spaces</label>
+            <div className="relative flex items-center">
+               <input type="number" id="parkingCount" name="parkingCount" min="0" defaultValue={initialData?.parkingCount || 0} className={inputClass} />
+               <Car size={18} className="absolute right-5 text-primary-200" />
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="petsAllowed" className={labelClass}>
-              <span className="flex items-center gap-2"><PawPrint size={16} className="text-primary-600" /> สัตว์เลี้ยง (จำนวนที่รับ)</span>
-            </label>
-            <input type="number" id="petsAllowed" name="petsAllowed" min="0" defaultValue={initialData?.petsAllowed || 0} className={inputClass} />
-            <p className="text-xs text-gray-400 mt-1">ใส่ 0 = ไม่รับสัตว์เลี้ยง</p>
+          <div className="relative group">
+            <label htmlFor="petsAllowed" className={labelClass}>Pet Allowance Policy</label>
+            <div className="relative flex items-center">
+               <input type="number" id="petsAllowed" name="petsAllowed" min="0" defaultValue={initialData?.petsAllowed || 0} className={inputClass} />
+               <PawPrint size={18} className="absolute right-5 text-primary-200" />
+            </div>
+            <p className="text-[10px] text-primary-300 font-bold uppercase mt-2 ml-1">0 = No Pets allowed</p>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* === Google Maps === */}
-      <div className="pt-6 border-t border-gray-200">
-        <h3 className={sectionTitleClass}><MapPin size={20} className="text-primary-600" /> พิกัดที่ตั้ง</h3>
+      <section className={sectionCardClass}>
         <div>
-          <label htmlFor="googleMapsUrl" className={labelClass}>Google Maps Link</label>
-          <input type="url" id="googleMapsUrl" name="googleMapsUrl" defaultValue={initialData?.googleMapsUrl || ""} placeholder="https://maps.google.com/..." className={inputClass} />
-          <p className="text-xs text-gray-400 mt-1">วางลิงก์จาก Google Maps เพื่อให้ลูกค้าดูตำแหน่ง</p>
+          <h3 className={sectionTitleClass}><MapPin size={22} className="text-primary-600" /> พิกัดที่ตั้ง</h3>
+          <p className="text-primary-900/40 text-sm font-bold ml-9">Link to the property's exact location on Google Maps.</p>
         </div>
-      </div>
+        <div className="relative group">
+           <label htmlFor="googleMapsUrl" className={labelClass}>Google Maps URL</label>
+           <input type="url" id="googleMapsUrl" name="googleMapsUrl" defaultValue={initialData?.googleMapsUrl || ""} placeholder="https://maps.google.com/..." className={inputClass} />
+        </div>
+      </section>
 
       {/* === Image Upload === */}
-      <div className="pt-6 border-t border-gray-200">
-        <h3 className={sectionTitleClass}>📸 รูปภาพ</h3>
-        <p className="text-sm text-gray-500 mb-3">อัปโหลดได้ไม่จำกัด — รูปแรกจะเป็น <span className="font-bold text-primary-600">รูปปก</span> แสดงในหน้าแรก</p>
+      <section className={sectionCardClass}>
+        <div>
+          <h3 className={sectionTitleClass}>📸 แกลเลอรี่รูปภาพ</h3>
+          <p className="text-primary-900/40 text-sm font-bold ml-9">Upload high-quality images. The first image will be the cover.</p>
+        </div>
         <ImageUpload value={uploadedImages} onChange={setUploadedImages} />
-      </div>
+      </section>
 
-      {/* === Submit === */}
-      <div className="flex gap-4 pt-6 border-t border-gray-200">
-        <button type="submit" disabled={isSubmitting} className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70 shadow-sm">
-          {isSubmitting ? "กำลังบันทึก..." : <><Save size={18} /> {isEditing ? "อัปเดตข้อมูล" : "สร้างประกาศ"}</>}
-        </button>
-        <Link href="/admin/properties" className="flex-1 bg-gray-100 border border-gray-300 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2">
-          ยกเลิก
-        </Link>
+      {/* === Submit Bar === */}
+      <div className="sticky bottom-6 z-20 px-8 py-6 bg-primary-950/90 backdrop-blur-xl rounded-[32px] border border-white/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col sm:flex-row gap-4 items-center">
+        <div className="flex-grow">
+           <p className="text-primary-100 font-bold text-sm tracking-tight">{isEditing ? "Currently editing listing" : "Ready to publish new listing"}</p>
+           <p className="text-primary-400 text-[10px] font-black uppercase tracking-widest">{isEditing ? initialData?.title : "Chiang Mai Real Estate Portal"}</p>
+        </div>
+        <div className="flex gap-4 w-full sm:w-auto">
+          <Link href="/admin/properties" className="flex-1 sm:flex-none px-10 py-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-black uppercase tracking-widest text-xs transition-all flex items-center justify-center">
+             ยกเลิก
+          </Link>
+          <button type="submit" disabled={isSubmitting} className="flex-1 sm:flex-none bg-primary-600 hover:bg-primary-700 text-white font-black px-12 py-4 rounded-2xl transition-all flex items-center justify-center gap-3 disabled:opacity-70 shadow-lg shadow-primary-600/30">
+            {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <><Save size={18} /> {isEditing ? "อัปเดตข้อมูล" : "สร้างประกาศ"}</>}
+          </button>
+        </div>
       </div>
     </form>
   );
 }
+
