@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
-import { Home, MessageSquare, PlusCircle } from "lucide-react";
+import { Home, MessageSquare, PlusCircle, Users } from "lucide-react";
 
 export const metadata = {
   title: "Dashboard | Admin Portal",
@@ -10,6 +10,7 @@ export default async function AdminDashboard() {
   const propertyCount = await prisma.property.count();
   const inquiryCount = await prisma.inquiry.count();
   const pendingInquiriesCount = await prisma.inquiry.count({ where: { status: 'Pending' } });
+  const subscriberCount = await prisma.subscriber.count({ where: { active: true } });
   
   const recentInquiries = await prisma.inquiry.findMany({
     take: 5,
@@ -35,7 +36,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <div className="bg-white p-8 rounded-[32px] shadow-sm border border-primary-100 flex items-center gap-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-500"></div>
           <div className="w-16 h-16 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center relative z-10">
@@ -66,6 +67,17 @@ export default async function AdminDashboard() {
           <div className="relative z-10">
             <p className="text-sm text-amber-700/70 font-bold uppercase tracking-widest mb-1">Pending Inquiries</p>
             <p className="text-4xl font-black text-primary-950">{pendingInquiriesCount}</p>
+          </div>
+        </div>
+
+        <div className="bg-white p-8 rounded-[32px] shadow-sm border border-primary-100 flex items-center gap-6 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-500"></div>
+          <div className="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center relative z-10">
+            <Users size={32} />
+          </div>
+          <div className="relative z-10">
+            <p className="text-sm text-emerald-700/70 font-bold uppercase tracking-widest mb-1">Subscribers</p>
+            <p className="text-4xl font-black text-primary-950">{subscriberCount}</p>
           </div>
         </div>
       </div>

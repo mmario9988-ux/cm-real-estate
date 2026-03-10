@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, Home, MessageSquare, LogOut } from "lucide-react";
+import { LayoutDashboard, Home, MessageSquare, LogOut, Users, Settings } from "lucide-react";
 
 export default async function AdminLayout({
   children,
@@ -37,6 +37,12 @@ export default async function AdminLayout({
           </Link>
           <Link href="/admin/inquiries" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium hover:bg-primary-50 hover:text-primary-700`}>
             <MessageSquare size={20} /> Inquiries
+          </Link>
+          <Link href="/admin/subscribers" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium hover:bg-primary-50 hover:text-primary-700`}>
+            <Users size={20} /> Subscribers
+          </Link>
+          <Link href="/admin/settings" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium hover:bg-primary-50 hover:text-primary-700`}>
+            <Settings size={20} /> Settings
           </Link>
         </nav>
         

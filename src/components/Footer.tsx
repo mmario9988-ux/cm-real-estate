@@ -1,17 +1,26 @@
 import Link from "next/link";
 import { MapPin, Phone, Mail, Instagram, Facebook } from "lucide-react";
+import NewsletterForm from "./NewsletterForm";
 
 export default function Footer() {
   return (
-    <footer className="bg-primary-900 text-primary-50 py-12 border-t border-primary-800">
+    <footer className="bg-primary-900 text-primary-50 py-16 border-t border-primary-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="col-span-1 md:col-span-2">
-            <h3 className="text-2xl font-bold tracking-tight mb-4 text-white">Chiang Mai Estates</h3>
-            <p className="text-primary-200 mb-6 max-w-sm leading-relaxed">
-              Discover your perfect home in the Rose of the North. We curate the finest properties embracing the Lanna lifestyle and modern comfort.
-            </p>
-            <div className="flex space-x-4">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+          <div className="lg:col-span-2 space-y-8">
+            <div>
+              <h3 className="text-2xl font-bold tracking-tight mb-4 text-white">Chiang Mai Estates</h3>
+              <p className="text-primary-200 mb-6 max-w-sm leading-relaxed">
+                Discover your perfect home in the Rose of the North. We curate the finest properties embracing the Lanna lifestyle and modern comfort.
+              </p>
+            </div>
+            
+            <div className="space-y-4">
+              <h4 className="text-sm font-bold uppercase tracking-widest text-primary-400">Subscribe for House Updates</h4>
+              <NewsletterForm />
+            </div>
+
+            <div className="flex space-x-4 pt-4">
               <a href="#" aria-label="Facebook" className="text-primary-200 hover:text-accent-500 transition-colors">
                 <Facebook size={20} />
               </a>
