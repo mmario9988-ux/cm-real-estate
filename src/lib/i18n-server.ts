@@ -11,8 +11,8 @@ export async function getLanguage() {
   return (lang === "en" || lang === "th") ? lang : "th";
 }
 
-export async function getTranslation() {
-  const lang = await getLanguage();
+export async function getTranslation(optionalLang?: Language) {
+  const lang = optionalLang || await getLanguage();
   
   return (path: string) => {
     const keys = path.split(".");
