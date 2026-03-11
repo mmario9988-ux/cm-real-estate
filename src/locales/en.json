@@ -78,12 +78,19 @@
     "email": "Email *",
     "phone": "Phone",
     "message": "Message *",
-    "send": "Send Inquiry",
-    "sending": "Sending...",
-    "successTitle": "Message Sent!",
-    "successMessage": "Thank you for your inquiry. Our agents will get back to you shortly.",
-    "sendAnother": "Send another message",
-    "defaultMessage": "I am interested in {title} and would like to know more..."
+    "submit": "Send Inquiry",
+    "success": "Your inquiry has been sent successfully! Our team will contact you soon."
+  },
+  "blog": {
+    "title": "Blog & Articles",
+    "subtitle": "Real estate news, home decor tips, and lifestyle in Chiang Mai",
+    "readMore": "Read More",
+    "viewAll": "View All",
+    "latest": "Recent Articles",
+    "backToBlog": "Back to Blog",
+    "share": "Share this article",
+    "continueShopping": "Find your dream home in Chiang Mai",
+    "browseListings": "Browse Listings"
   },
   "favorites": {
     "title": "My Favorites",

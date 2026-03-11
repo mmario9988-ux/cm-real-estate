@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
-import { Home, MessageSquare, PlusCircle, Users } from "lucide-react";
+import { Home, MessageSquare, PlusCircle, Users, FileText } from "lucide-react";
 
 export const metadata = {
   title: "Dashboard | Admin Portal",
@@ -11,6 +11,7 @@ export default async function AdminDashboard() {
   const inquiryCount = await prisma.inquiry.count();
   const pendingInquiriesCount = await prisma.inquiry.count({ where: { status: 'Pending' } });
   const subscriberCount = await prisma.subscriber.count({ where: { active: true } });
+  const postCount = await prisma.post.count();
   
   const recentInquiries = await prisma.inquiry.findMany({
     take: 5,
@@ -30,56 +31,72 @@ export default async function AdminDashboard() {
           <h1 className="text-4xl font-extrabold text-primary-950 tracking-tight">Dashboard Overview</h1>
           <p className="text-primary-700/60 mt-1 font-medium">Welcome back! Here's what's happening today.</p>
         </div>
-        <Link href="/admin/properties/new" className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-2xl transition-all flex items-center gap-2 shadow-lg shadow-primary-600/20 font-bold">
-          <PlusCircle size={20} /> Create New Listing
-        </Link>
+        <div className="flex gap-3">
+          <Link href="/admin/blog/new" className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-6 py-3 rounded-2xl transition-all flex items-center gap-2 font-bold shadow-sm">
+            <PlusCircle size={20} /> New Article
+          </Link>
+          <Link href="/admin/properties/new" className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-2xl transition-all flex items-center gap-2 shadow-lg shadow-primary-600/20 font-bold">
+            <PlusCircle size={20} /> Create Listing
+          </Link>
+        </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <div className="bg-white p-8 rounded-[32px] shadow-sm border border-primary-100 flex items-center gap-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-500"></div>
-          <div className="w-16 h-16 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center relative z-10">
-            <Home size={32} />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="bg-white p-6 rounded-[32px] shadow-sm border border-primary-100 flex items-center gap-4 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-primary-50 rounded-full -mr-12 -mt-12 group-hover:scale-110 transition-transform duration-500"></div>
+          <div className="w-14 h-14 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center relative z-10 shrink-0">
+            <Home size={28} />
           </div>
-          <div className="relative z-10">
-            <p className="text-sm text-primary-700/70 font-bold uppercase tracking-widest mb-1">Total Listings</p>
-            <p className="text-4xl font-black text-primary-950">{propertyCount}</p>
-          </div>
-        </div>
-
-        <div className="bg-white p-8 rounded-[32px] shadow-sm border border-primary-100 flex items-center gap-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-accent-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-500"></div>
-          <div className="w-16 h-16 rounded-2xl bg-accent-100 text-accent-600 flex items-center justify-center relative z-10">
-            <MessageSquare size={32} />
-          </div>
-          <div className="relative z-10">
-            <p className="text-sm text-accent-700/70 font-bold uppercase tracking-widest mb-1">Total Inquiries</p>
-            <p className="text-4xl font-black text-primary-950">{inquiryCount}</p>
+          <div className="relative z-10 truncate">
+            <p className="text-[10px] text-primary-700/70 font-black uppercase tracking-widest mb-0.5">Listings</p>
+            <p className="text-3xl font-black text-primary-950">{propertyCount}</p>
           </div>
         </div>
 
-        <div className="bg-white p-8 rounded-[32px] shadow-sm border border-primary-100 flex items-center gap-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-amber-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-500"></div>
-          <div className="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center relative z-10">
-            <MessageSquare size={32} />
+        <div className="bg-white p-6 rounded-[32px] shadow-sm border border-primary-100 flex items-center gap-4 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-accent-50 rounded-full -mr-12 -mt-12 group-hover:scale-110 transition-transform duration-500"></div>
+          <div className="w-14 h-14 rounded-2xl bg-accent-100 text-accent-600 flex items-center justify-center relative z-10 shrink-0">
+            <MessageSquare size={28} />
           </div>
-          <div className="relative z-10">
-            <p className="text-sm text-amber-700/70 font-bold uppercase tracking-widest mb-1">Pending Inquiries</p>
-            <p className="text-4xl font-black text-primary-950">{pendingInquiriesCount}</p>
+          <div className="relative z-10 truncate">
+            <p className="text-[10px] text-accent-700/70 font-black uppercase tracking-widest mb-0.5">Inquiries</p>
+            <p className="text-3xl font-black text-primary-950">{inquiryCount}</p>
           </div>
         </div>
 
-        <div className="bg-white p-8 rounded-[32px] shadow-sm border border-primary-100 flex items-center gap-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-500"></div>
-          <div className="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center relative z-10">
-            <Users size={32} />
+        <div className="bg-white p-6 rounded-[32px] shadow-sm border border-primary-100 flex items-center gap-4 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-full -mr-12 -mt-12 group-hover:scale-110 transition-transform duration-500"></div>
+          <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center relative z-10 shrink-0">
+            <MessageSquare size={28} />
           </div>
-          <div className="relative z-10">
-            <p className="text-sm text-emerald-700/70 font-bold uppercase tracking-widest mb-1">Subscribers</p>
-            <p className="text-4xl font-black text-primary-950">{subscriberCount}</p>
+          <div className="relative z-10 truncate">
+            <p className="text-[10px] text-amber-700/70 font-black uppercase tracking-widest mb-0.5">Pending</p>
+            <p className="text-3xl font-black text-primary-950">{pendingInquiriesCount}</p>
           </div>
         </div>
+
+        <div className="bg-white p-6 rounded-[32px] shadow-sm border border-primary-100 flex items-center gap-4 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-full -mr-12 -mt-12 group-hover:scale-110 transition-transform duration-500"></div>
+          <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center relative z-10 shrink-0">
+            <Users size={28} />
+          </div>
+          <div className="relative z-10 truncate">
+            <p className="text-[10px] text-emerald-700/70 font-black uppercase tracking-widest mb-0.5">Members</p>
+            <p className="text-3xl font-black text-primary-950">{subscriberCount}</p>
+          </div>
+        </div>
+
+        <Link href="/admin/blog" className="bg-white p-6 rounded-[32px] shadow-sm border border-primary-100 flex items-center gap-4 relative overflow-hidden group hover:border-indigo-200 transition-all">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-full -mr-12 -mt-12 group-hover:scale-110 transition-transform duration-500"></div>
+          <div className="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center relative z-10 shrink-0">
+            <FileText size={28} />
+          </div>
+          <div className="relative z-10 truncate">
+            <p className="text-[10px] text-indigo-700/70 font-black uppercase tracking-widest mb-0.5">Articles</p>
+            <p className="text-3xl font-black text-primary-950">{postCount}</p>
+          </div>
+        </Link>
       </div>
 
       {/* Main Grid */}

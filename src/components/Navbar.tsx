@@ -8,6 +8,7 @@ import { useFavorites } from "@/context/FavoritesContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const { count } = useFavorites();
 
@@ -15,6 +16,7 @@ export default function Navbar() {
     { name: t("navbar.buy"), href: "/properties?status=For+Sale", hasDropdown: true },
     { name: t("navbar.rent"), href: "/properties?status=For+Rent", hasDropdown: true },
     { name: t("navbar.all"), href: "/properties", hasDropdown: false },
+    { name: t("blog.title") || "Blog", href: "/blog", hasDropdown: false },
     { name: t("navbar.about"), href: "/about", hasDropdown: false },
     { name: t("navbar.contact"), href: "/contact", hasDropdown: false },
   ];
@@ -27,19 +29,7 @@ export default function Navbar() {
           <div className="flex items-center">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group mr-8">
-              <img 
-                src="/logo.png" 
-                alt="บ้านเช่าเชียงใหม่" 
-                className="w-12 h-12 object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-              <svg viewBox="0 0 40 40" className="w-10 h-10 hidden" fill="none" strokeWidth="3">
-                <circle cx="20" cy="20" r="18" stroke="#facc15" />
-                <path d="M9 22L20 11L31 22M13 18V28H27V18" stroke="#dc2626" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <Logo />
               <div className="flex flex-col">
                 <span className="text-xl font-bold text-gray-900 leading-tight">บ้านเช่าเชียงใหม่</span>
                 <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">By CM DIGITAL MEDIA</span>
@@ -166,5 +156,27 @@ export default function Navbar() {
         </div>
       )}
     </nav>
+  );
+}
+
+function Logo() {
+  const [imgError, setImgError] = useState(false);
+
+  if (imgError) {
+    return (
+      <svg viewBox="0 0 40 40" className="w-10 h-10" fill="none" strokeWidth="3">
+        <circle cx="20" cy="20" r="18" stroke="#facc15" />
+        <path d="M9 22L20 11L31 22M13 18V28H27V18" stroke="#dc2626" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  return (
+    <img 
+      src="/logo.png" 
+      alt="บ้านเช่าเชียงใหม่" 
+      className="w-12 h-12 object-contain"
+      onError={() => setImgError(true)}
+    />
   );
 }

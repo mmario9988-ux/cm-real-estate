@@ -3,10 +3,14 @@ import { ArrowRight, Mountain, Sun, Home as HomeIcon } from "lucide-react";
 import PropertyCard from "@/components/PropertyCard";
 import HeroSearchBox from "@/components/HeroSearchBox";
 import prisma from "@/lib/prisma";
+import { getTranslation, getLanguage } from "@/lib/i18n-server";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
+  const lang = await getLanguage();
+  const t = await getTranslation(lang);
+
   // Fetch properties for sale
   const saleProperties = await prisma.property.findMany({
     where: { status: 'For Sale' },
@@ -21,8 +25,15 @@ export default async function Home() {
     orderBy: { createdAt: 'desc' },
   });
 
+  // Fetch top 3 blog posts
+  const recentPosts = await prisma.post.findMany({
+    where: { published: true },
+    take: 3,
+    orderBy: { createdAt: 'desc' },
+  });
+
   return (
-    <div>
+    <div className="bg-background">
       {/* Hero Section */}
       <section className="relative w-full bg-white flex flex-col mb-0 md:mb-16">
         {/* Banner Banner */}
@@ -62,7 +73,7 @@ export default async function Home() {
       </section>
 
       {/* For Rent Properties */}
-      <section className="pt-4 pb-20 md:py-20 bg-background">
+      <section className="pt-4 pb-20 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12">
             <div>
@@ -114,6 +125,56 @@ export default async function Home() {
           )}
         </div>
       </section>
+
+      {/* Blog Section */}
+      {recentPosts.length > 0 && (
+        <section className="py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-12">
+              <div>
+                <h2 className="text-3xl font-bold text-foreground mb-4">{t("blog.title")}</h2>
+                <p className="text-foreground/70 max-w-2xl">{t("blog.subtitle")}</p>
+              </div>
+              <Link href="/blog" className="text-primary-600 font-semibold hover:text-primary-700 mt-4 md:mt-0 flex items-center gap-1 group">
+                {t("blog.viewAll")} <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {recentPosts.map((post) => (
+                <article key={post.id} className="group bg-white rounded-3xl overflow-hidden border border-gray-100 hover:border-primary-200 transition-all duration-300 hover:shadow-2xl hover:shadow-primary-900/5 flex flex-col">
+                  <Link href={`/blog/${post.slug}`} className="block relative aspect-[16/10] overflow-hidden">
+                    {post.image ? (
+                      <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                    ) : (
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-300 italic">No Image</div>
+                    )}
+                  </Link>
+                  <div className="p-8 flex flex-col flex-grow">
+                    <div className="text-sm text-primary-600 font-bold mb-3 uppercase tracking-wider">
+                      {new Date(post.createdAt).toLocaleDateString(lang === 'th' ? 'th-TH' : 'en-US')}
+                    </div>
+                    <Link href={`/blog/${post.slug}`}>
+                      <h3 className="text-xl font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-primary-600 transition-colors leading-tight">
+                        {post.title}
+                      </h3>
+                    </Link>
+                    <p className="text-gray-500 line-clamp-3 mb-6 flex-grow">
+                      {post.excerpt}
+                    </p>
+                    <Link 
+                      href={`/blog/${post.slug}`}
+                      className="inline-flex items-center gap-2 text-primary-600 font-bold hover:text-primary-700 transition-colors"
+                    >
+                      {t("blog.readMore")} <ArrowRight size={18} />
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Why Choose Us */}
       <section className="py-20 bg-gray-50 dark:bg-gray-900/10">
