@@ -18,31 +18,61 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   if (!property) return { title: "Property Not Found" };
 
+  const lang = await getLanguage();
+
   const formattedPrice = new Intl.NumberFormat("th-TH", {
     style: "currency",
     currency: "THB",
     maximumFractionDigits: 0
   }).format(property.price);
 
+  // Dynamic Keyword Logic
+  const isThai = lang === 'th';
+  
+  // Type translations
+  const typeMap: Record<string, { th: string, en: string }> = {
+    'House': { th: 'บ้านเดี่ยว', en: 'House' },
+    'Condo': { th: 'คอนโด', en: 'Condo' },
+    'Townhouse': { th: 'ทาวน์โฮม', en: 'Townhouse' },
+    'Land': { th: 'ที่ดิน', en: 'Land' }
+  };
+  
+  const typeStr = typeMap[property.type]?.[isThai ? 'th' : 'en'] || property.type;
+  
+  // Status translations
+  const statusStr = property.status === 'For Sale' 
+    ? (isThai ? 'ขาย' : 'For Sale') 
+    : (isThai ? 'ให้เช่า' : 'For Rent');
+
+  const seoPrefix = isThai 
+    ? `[${statusStr}${typeStr}]` 
+    : `[${typeStr} ${statusStr}]`;
+
+  const seoTitle = `${seoPrefix} ${property.title} ${property.location} ${isThai ? 'ราคา' : '-'} ${formattedPrice} | Chiang Mai Estates`;
+
   let images: string[] = [];
   try { images = JSON.parse(property.images) || []; } catch(e) {}
   const ogImage = images.length > 0 ? images[0] : "/hero-bg.jpg";
 
   return {
-    title: `${property.title} - ${formattedPrice} | ${property.location}`,
-    description: `${property.title} ราคา ${formattedPrice} ตั้งอยู่ที่ ${property.location}. ${property.description.substring(0, 120)}...`,
+    title: seoTitle,
+    description: `${property.title} ${isThai ? 'ราคา' : 'Price'} ${formattedPrice} ${isThai ? 'ตั้งอยู่ที่' : 'located in'} ${property.location}. ${property.description.substring(0, 150)}...`,
     alternates: {
       canonical: `/properties/${resolvedParams.id}`,
+      languages: {
+        'th': `/properties/${resolvedParams.id}`,
+        'en': `/en/properties/${resolvedParams.id}`,
+      },
     },
     openGraph: {
-      title: `${property.title} - ${formattedPrice}`,
+      title: seoTitle,
       description: property.description.substring(0, 160) + "...",
       images: [
         {
           url: ogImage,
           width: 1200,
           height: 630,
-          alt: property.title,
+          alt: `${seoPrefix} ${property.title}`,
         }
       ]
     }

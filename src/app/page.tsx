@@ -7,6 +7,16 @@ import { getTranslation, getLanguage } from "@/lib/i18n-server";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  alternates: {
+    canonical: '/',
+    languages: {
+      'th': '/',
+      'en': '/en',
+    },
+  },
+};
+
 export default async function Home() {
   const lang = await getLanguage();
   const t = await getTranslation(lang);

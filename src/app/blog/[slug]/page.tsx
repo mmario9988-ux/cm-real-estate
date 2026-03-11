@@ -3,6 +3,32 @@ import { ArrowLeft, Calendar, User, Share2, Facebook, Twitter, Link as LinkIcon 
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = await prisma.post.findUnique({
+    where: { slug },
+  });
+
+  if (!post || !post.published) return { title: "Post Not Found" };
+
+  return {
+    title: `${post.title} | Chiang Mai Estates Blog`,
+    description: post.excerpt || `${post.title} - Read more on our blog.`,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+      languages: {
+        'th': `/blog/${post.slug}`,
+        'en': `/en/blog/${post.slug}`,
+      },
+    },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt || "",
+      images: post.image ? [post.image] : [],
+    }
+  };
+}
+
 export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = await prisma.post.findUnique({

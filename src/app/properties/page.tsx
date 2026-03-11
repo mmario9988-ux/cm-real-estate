@@ -23,6 +23,13 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Properties | Chiang Mai Estates",
   description: "Browse our curated selection of properties in Chiang Mai with advanced search filters.",
+  alternates: {
+    canonical: '/properties',
+    languages: {
+      'th': '/properties',
+      'en': '/en/properties',
+    },
+  },
 };
 
 interface PageProps {
