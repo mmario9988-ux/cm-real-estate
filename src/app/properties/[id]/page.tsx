@@ -254,12 +254,28 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
               </div>
             </div>
 
-            {/* Google Maps */}
+            {/* Google Maps Embed */}
             {property.googleMapsUrl && (
               <div>
                 <h2 className="text-2xl font-bold text-foreground mb-4">📍 {t("property.location")}</h2>
+                
+                {/* Embedded Map */}
+                <div className="w-full h-80 md:h-[400px] rounded-2xl overflow-hidden shadow-sm border border-gray-100 mb-4 bg-gray-50 relative">
+                  <iframe
+                    title={`${property.title} - Location Map`}
+                    src={property.googleMapsUrl.includes('<iframe') 
+                          ? undefined 
+                          : `https://maps.google.com/maps?q=${encodeURIComponent(property.location)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                    className="absolute inset-0 w-full h-full border-0"
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                </div>
+                
+                {/* Fallback Link */}
                 <a
-                  href={property.googleMapsUrl}
+                  href={property.googleMapsUrl.includes('<iframe') ? '#' : property.googleMapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-xl transition-all shadow-sm"
@@ -267,6 +283,34 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                   <MapPin size={18} />
                   {t("property.viewInGoogleMaps")}
                 </a>
+              </div>
+            )}
+
+            {/* YouTube Video Embed */}
+            {property.youtubeUrl && (
+              <div>
+                <h2 className="text-2xl font-bold text-foreground mb-4">▶️ {t("property.videoTour") || "Video Tour"}</h2>
+                <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-sm border border-gray-100 mb-4 bg-gray-50 relative">
+                  {/* Extract Video ID if standard watch?v= format or youtu.be/ format */}
+                  <iframe 
+                    title={`${property.title} - YouTube Video Tour`}
+                    className="absolute inset-0 w-full h-full border-0"
+                    src={(() => {
+                      const url = property.youtubeUrl;
+                      let videoId = "";
+                      if (url.includes("v=")) {
+                        videoId = url.split("v=")[1].substring(0, 11);
+                      } else if (url.includes("youtu.be/")) {
+                        videoId = url.split("youtu.be/")[1].substring(0, 11);
+                      } else if (url.includes("embed/")) {
+                        videoId = url.split("embed/")[1].substring(0, 11);
+                      }
+                      return videoId ? `https://www.youtube.com/embed/${videoId}?rel=0` : url;
+                    })()}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowFullScreen
+                  ></iframe>
+                </div>
               </div>
             )}
 

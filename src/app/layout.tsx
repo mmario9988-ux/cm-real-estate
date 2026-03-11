@@ -3,6 +3,7 @@ import { Inter, Prompt } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
+import FloatingChat from "@/components/FloatingChat";
 import { GoogleAnalytics } from '@next/third-parties/google';
 import "./globals.css";
 
@@ -66,6 +67,7 @@ export default function RootLayout({
           </main>
           <Footer />
         </Providers>
+        <FloatingChat />
         {process.env.NEXT_PUBLIC_GA_ID && (
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
         )}

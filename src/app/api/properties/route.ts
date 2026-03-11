@@ -35,6 +35,7 @@ export async function POST(req: Request) {
         images: body.images || "[]",
         features: body.features || "[]",
         googleMapsUrl: body.googleMapsUrl || null,
+        youtubeUrl: body.youtubeUrl || null,
         furniture: body.furniture || "none",
         appliances: body.appliances || "none",
         airconCount: Number(body.airconCount) || 0,

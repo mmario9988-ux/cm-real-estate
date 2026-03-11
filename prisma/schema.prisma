@@ -42,6 +42,7 @@ model Property {
   petsAllowed      Int      @default(0)
   waterHeaterCount Int      @default(0)
   viewCount        Int      @default(0)
+  youtubeUrl       String?
 }
 
 model Inquiry {

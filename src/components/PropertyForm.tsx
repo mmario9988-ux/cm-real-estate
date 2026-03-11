@@ -46,6 +46,7 @@ export default function PropertyForm({ initialData }: { initialData?: any }) {
       ),
       features: initialData?.features || JSON.stringify([]),
       googleMapsUrl: formData.get("googleMapsUrl") || null,
+      youtubeUrl: formData.get("youtubeUrl") || null,
       furniture: formData.get("furniture"),
       appliances: formData.get("appliances"),
       airconCount: formData.get("airconCount"),
@@ -251,15 +252,21 @@ export default function PropertyForm({ initialData }: { initialData?: any }) {
         </div>
       </section>
 
-      {/* === Google Maps === */}
+      {/* === Maps & Video === */}
       <section className={sectionCardClass}>
         <div>
-          <h3 className={sectionTitleClass}><MapPin size={22} className="text-primary-600" /> พิกัดที่ตั้ง</h3>
-          <p className="text-primary-900/40 text-sm font-bold ml-9">Link to the property's exact location on Google Maps.</p>
+          <h3 className={sectionTitleClass}><MapPin size={22} className="text-primary-600" /> พิกัดที่ตั้ง และวิดีโอ</h3>
+          <p className="text-primary-900/40 text-sm font-bold ml-9">Link to the property's exact location on Google Maps and YouTube tour.</p>
         </div>
-        <div className="relative group">
-           <label htmlFor="googleMapsUrl" className={labelClass}>Google Maps URL</label>
-           <input type="url" id="googleMapsUrl" name="googleMapsUrl" defaultValue={initialData?.googleMapsUrl || ""} placeholder="https://maps.google.com/..." className={inputClass} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="relative group">
+             <label htmlFor="googleMapsUrl" className={labelClass}>Google Maps URL</label>
+             <input type="url" id="googleMapsUrl" name="googleMapsUrl" defaultValue={initialData?.googleMapsUrl || ""} placeholder="https://maps.google.com/..." className={inputClass} />
+          </div>
+          <div className="relative group">
+             <label htmlFor="youtubeUrl" className={labelClass}>YouTube Video URL</label>
+             <input type="url" id="youtubeUrl" name="youtubeUrl" defaultValue={initialData?.youtubeUrl || ""} placeholder="https://youtube.com/watch?v=..." className={inputClass} />
+          </div>
         </div>
       </section>
 
