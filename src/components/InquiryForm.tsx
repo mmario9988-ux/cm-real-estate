@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { Send } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function InquiryForm({ propertyId, propertyTitle }: { propertyId?: string, propertyTitle?: string }) {
+  const { t } = useLanguage();
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -41,22 +43,26 @@ export default function InquiryForm({ propertyId, propertyTitle }: { propertyId?
   if (status === "success") {
     return (
       <div className="bg-primary-50 border border-primary-200 text-primary-800 p-6 rounded-2xl text-center">
-        <h4 className="text-lg font-bold mb-2">Message Sent!</h4>
-        <p className="text-sm opacity-80">Thank you for your inquiry. Our agents will get back to you shortly.</p>
+        <h4 className="text-lg font-bold mb-2">{t("inquiry.successTitle")}</h4>
+        <p className="text-sm opacity-80">{t("inquiry.successMessage")}</p>
         <button 
           onClick={() => setStatus("idle")}
           className="mt-6 text-sm font-semibold text-primary-600 hover:text-primary-700 underline"
         >
-          Send another message
+          {t("inquiry.sendAnother")}
         </button>
       </div>
     );
   }
 
+  const defaultMessage = propertyTitle 
+    ? t("inquiry.defaultMessage").replace("{title}", propertyTitle)
+    : "";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-foreground/80 mb-1">Name *</label>
+        <label htmlFor="name" className="block text-sm font-medium text-foreground/80 mb-1">{t("inquiry.name")}</label>
         <input 
           type="text" 
           id="name" 
@@ -68,7 +74,7 @@ export default function InquiryForm({ propertyId, propertyTitle }: { propertyId?
       </div>
       
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-foreground/80 mb-1">Email *</label>
+        <label htmlFor="email" className="block text-sm font-medium text-foreground/80 mb-1">{t("inquiry.email")}</label>
         <input 
           type="email" 
           id="email" 
@@ -80,7 +86,7 @@ export default function InquiryForm({ propertyId, propertyTitle }: { propertyId?
       </div>
       
       <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-foreground/80 mb-1">Phone</label>
+        <label htmlFor="phone" className="block text-sm font-medium text-foreground/80 mb-1">{t("inquiry.phone")}</label>
         <input 
           type="tel" 
           id="phone" 
@@ -91,13 +97,13 @@ export default function InquiryForm({ propertyId, propertyTitle }: { propertyId?
       </div>
       
       <div>
-        <label htmlFor="message" className="block text-sm font-medium text-foreground/80 mb-1">Message *</label>
+        <label htmlFor="message" className="block text-sm font-medium text-foreground/80 mb-1">{t("inquiry.message")}</label>
         <textarea 
           id="message" 
           name="message" 
           required
           rows={4}
-          defaultValue={propertyTitle ? `I am interested in ${propertyTitle} and would like to know more...` : ""}
+          defaultValue={defaultMessage}
           className="w-full px-4 py-3 rounded-lg bg-background border border-primary-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all outline-none text-foreground resize-none"
         ></textarea>
       </div>
@@ -113,8 +119,8 @@ export default function InquiryForm({ propertyId, propertyTitle }: { propertyId?
         disabled={status === "loading"}
         className="w-full bg-accent-500 hover:bg-accent-600 text-white font-bold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-md shadow-accent-500/20"
       >
-        {status === "loading" ? "Sending..." : (
-          <>Send Inquiry <Send size={18} /></>
+        {status === "loading" ? t("inquiry.sending") : (
+          <>{t("inquiry.send")} <Send size={18} /></>
         )}
       </button>
     </form>

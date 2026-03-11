@@ -28,20 +28,20 @@ model Property {
   bedrooms         Int
   bathrooms        Int
   area             Float?
-  type             String   // e.g., "House", "Condo", "Land"
-  status           String   @default("Available") // e.g., "Available", "Sold", "Rented"
-  images           String   @default("[]") // JSON stringified array of URLs
-  features         String   @default("[]") // JSON stringified array of features
-  googleMapsUrl    String?  // Google Maps link
-  furniture        String   @default("none") // "full", "partial", "none"
-  appliances       String   @default("none") // "full", "partial", "none"
-  airconCount      Int      @default(0)
-  waterHeaterCount Int      @default(0)
-  parkingCount     Int      @default(0)
-  petsAllowed      Int      @default(0) // 0 = not allowed, >0 = max number
-  viewCount        Int      @default(0) // Tracks property views
+  type             String
+  status           String   @default("Available")
+  images           String   @default("[]")
+  features         String   @default("[]")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  airconCount      Int      @default(0)
+  appliances       String   @default("none")
+  furniture        String   @default("none")
+  googleMapsUrl    String?
+  parkingCount     Int      @default(0)
+  petsAllowed      Int      @default(0)
+  waterHeaterCount Int      @default(0)
+  viewCount        Int      @default(0)
 }
 
 model Inquiry {
@@ -52,7 +52,7 @@ model Inquiry {
   message     String
   propertyId  String?
   propertyUrl String?
-  status      String   @default("Pending") // Pending, Contacted, Resolved
+  status      String   @default("Pending")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

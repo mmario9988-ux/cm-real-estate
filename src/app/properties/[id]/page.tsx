@@ -1,11 +1,12 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import prisma from "@/lib/prisma";
 import { Bed, Bath, Square, MapPin, Check } from "lucide-react";
 import InquiryForm from "@/components/InquiryForm";
 import ImageGallery from "@/components/ImageGallery";
 import ViewTracker from "@/components/ViewTracker";
 import JsonLd from "@/components/JsonLd";
+import SimilarProperties from "@/components/SimilarProperties";
+import { getTranslation, getLanguage } from "@/lib/i18n-server";
 
 export const dynamic = "force-dynamic";
 
@@ -58,6 +59,9 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
     notFound();
   }
 
+  const t = await getTranslation();
+  const lang = await getLanguage();
+
   // Parse images and features safely
   let images: string[] = [];
   try { images = JSON.parse(property.images) || []; } catch(e) {}
@@ -93,6 +97,17 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
     }
   };
 
+  // Translate status and type
+  const displayStatus = property.status === "For Rent" ? t("filters.rent") : 
+                        property.status === "For Sale" ? t("filters.sale") : 
+                        property.status;
+  
+  const displayType = property.type === "House" ? t("property.house") :
+                      property.type === "Condo" ? t("property.condo") :
+                      property.type === "Townhouse" ? t("property.townhouse") :
+                      property.type === "Land" ? t("property.land") :
+                      property.type;
+
   return (
     <div className="bg-background min-h-screen pb-20">
       <JsonLd data={jsonLdData} />
@@ -108,17 +123,17 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
           <div className="lg:col-span-2 space-y-10">
             <div>
               <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-white text-gray-800 px-3 py-1 rounded-full text-sm font-semibold shadow-sm">
-                  {property.type}
+                <span className="bg-white text-gray-800 px-3 py-1 rounded-full text-sm font-semibold shadow-sm border border-gray-100">
+                  {displayType}
                 </span>
-                <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                <span className={`px-3 py-1 rounded-full text-sm font-semibold shadow-sm ${
                   property.status === 'For Sale' ? 'bg-amber-500 text-white' : 
                   property.status === 'For Rent' ? 'bg-blue-500 text-white' : 
                   property.status === 'Sold' ? 'bg-red-500 text-white' : 
                   property.status === 'Rented' ? 'bg-gray-500 text-white' : 
                   'bg-primary-500 text-white'
                 }`}>
-                  {property.status}
+                  {displayStatus}
                 </span>
               </div>
               <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-4 leading-tight">{property.title}</h1>
@@ -129,8 +144,9 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
             </div>
 
             {/* Price (Mobile) */}
-            <div className="lg:hidden text-3xl font-bold text-primary-600 border-y border-primary-100 py-6">
-              {formattedPrice}
+            <div className="lg:hidden border-y border-primary-100 py-6">
+              <div className="text-sm text-foreground/60 uppercase tracking-wider font-semibold mb-1">{t("property.askingPrice")}</div>
+              <div className="text-3xl font-bold text-primary-600">{formattedPrice}</div>
             </div>
 
             {/* Key Stats */}
@@ -139,28 +155,28 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                 <div className="bg-primary-50 p-3 rounded-xl text-primary-600"><Bed size={24} /></div>
                 <div>
                   <div className="text-2xl font-bold text-foreground">{property.bedrooms}</div>
-                  <div className="text-sm text-foreground/60">Bedrooms</div>
+                  <div className="text-sm text-foreground/60">{t("property.bedrooms")}</div>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <div className="bg-primary-50 p-3 rounded-xl text-primary-600"><Bath size={24} /></div>
                 <div>
                   <div className="text-2xl font-bold text-foreground">{property.bathrooms}</div>
-                  <div className="text-sm text-foreground/60">Bathrooms</div>
+                  <div className="text-sm text-foreground/60">{t("property.bathrooms")}</div>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <div className="bg-primary-50 p-3 rounded-xl text-primary-600"><Square size={24} /></div>
                 <div>
                   <div className="text-2xl font-bold text-foreground">{property.area || '-'}</div>
-                  <div className="text-sm text-foreground/60">Sqm Area</div>
+                  <div className="text-sm text-foreground/60">{t("property.area")} ({t("property.sqm")})</div>
                 </div>
               </div>
             </div>
 
             {/* Description */}
             <div>
-              <h2 className="text-2xl font-bold text-foreground mb-4">Description</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-4">{t("property.description")}</h2>
               <div className="text-foreground/80 leading-relaxed whitespace-pre-line text-lg">
                 {property.description}
               </div>
@@ -168,15 +184,15 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
 
             {/* Facilities */}
             <div>
-              <h2 className="text-2xl font-bold text-foreground mb-6">สิ่งอำนวยความสะดวก</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-6">{t("property.facilities")}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Furniture */}
                 <div className="flex items-center gap-3 p-4 rounded-xl bg-primary-50 dark:bg-primary-900/30">
                   <span className="text-2xl">🛋️</span>
                   <div>
-                    <div className="text-sm text-foreground/60">เฟอร์นิเจอร์</div>
+                    <div className="text-sm text-foreground/60">{t("property.furniture")}</div>
                     <div className="font-semibold text-foreground">
-                      {property.furniture === 'full' ? 'มีครบ' : property.furniture === 'partial' ? 'มีบางส่วน' : 'ไม่มี'}
+                      {property.furniture === 'full' ? t("property.full") : property.furniture === 'partial' ? t("property.partial") : t("property.none")}
                     </div>
                   </div>
                 </div>
@@ -185,9 +201,9 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                 <div className="flex items-center gap-3 p-4 rounded-xl bg-primary-50 dark:bg-primary-900/30">
                   <span className="text-2xl">⚡</span>
                   <div>
-                    <div className="text-sm text-foreground/60">เครื่องใช้ไฟฟ้า</div>
+                    <div className="text-sm text-foreground/60">{t("property.appliances")}</div>
                     <div className="font-semibold text-foreground">
-                      {property.appliances === 'full' ? 'มีครบ' : property.appliances === 'partial' ? 'มีบางส่วน' : 'ไม่มี'}
+                      {property.appliances === 'full' ? t("property.full") : property.appliances === 'partial' ? t("property.partial") : t("property.none")}
                     </div>
                   </div>
                 </div>
@@ -196,9 +212,9 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                 <div className="flex items-center gap-3 p-4 rounded-xl bg-primary-50 dark:bg-primary-900/30">
                   <span className="text-2xl">❄️</span>
                   <div>
-                    <div className="text-sm text-foreground/60">แอร์</div>
+                    <div className="text-sm text-foreground/60">{t("property.aircon")}</div>
                     <div className="font-semibold text-foreground">
-                      {property.airconCount > 0 ? `มี ${property.airconCount} เครื่อง` : 'ไม่มี'}
+                      {property.airconCount > 0 ? `${t("property.full")} ${property.airconCount} ${t("property.units")}` : t("property.none")}
                     </div>
                   </div>
                 </div>
@@ -207,9 +223,9 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                 <div className="flex items-center gap-3 p-4 rounded-xl bg-primary-50 dark:bg-primary-900/30">
                   <span className="text-2xl">🚿</span>
                   <div>
-                    <div className="text-sm text-foreground/60">เครื่องทำน้ำอุ่น</div>
+                    <div className="text-sm text-foreground/60">{t("property.waterHeater")}</div>
                     <div className="font-semibold text-foreground">
-                      {property.waterHeaterCount > 0 ? `มี ${property.waterHeaterCount} เครื่อง` : 'ไม่มี'}
+                      {property.waterHeaterCount > 0 ? `${t("property.full")} ${property.waterHeaterCount} ${t("property.units")}` : t("property.none")}
                     </div>
                   </div>
                 </div>
@@ -218,9 +234,9 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                 <div className="flex items-center gap-3 p-4 rounded-xl bg-primary-50 dark:bg-primary-900/30">
                   <span className="text-2xl">🚗</span>
                   <div>
-                    <div className="text-sm text-foreground/60">ที่จอดรถ</div>
+                    <div className="text-sm text-foreground/60">{t("property.parking")}</div>
                     <div className="font-semibold text-foreground">
-                      {property.parkingCount > 0 ? `มี ${property.parkingCount} คัน` : 'ไม่มี'}
+                      {property.parkingCount > 0 ? `${property.parkingCount} ${t("property.cars")}` : t("property.none")}
                     </div>
                   </div>
                 </div>
@@ -229,9 +245,9 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                 <div className="flex items-center gap-3 p-4 rounded-xl bg-primary-50 dark:bg-primary-900/30">
                   <span className="text-2xl">🐾</span>
                   <div>
-                    <div className="text-sm text-foreground/60">สัตว์เลี้ยง</div>
+                    <div className="text-sm text-foreground/60">{t("property.pets")}</div>
                     <div className="font-semibold text-foreground">
-                      {property.petsAllowed > 0 ? `รับได้ ${property.petsAllowed} ตัว` : 'ไม่รับ'}
+                      {property.petsAllowed > 0 ? `${t("property.allowed")} ${property.petsAllowed} ${t("property.petsCount")}` : t("property.notAllowed")}
                     </div>
                   </div>
                 </div>
@@ -241,7 +257,7 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
             {/* Google Maps */}
             {property.googleMapsUrl && (
               <div>
-                <h2 className="text-2xl font-bold text-foreground mb-4">📍 ตำแหน่งที่ตั้ง</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-4">📍 {t("property.location")}</h2>
                 <a
                   href={property.googleMapsUrl}
                   target="_blank"
@@ -249,7 +265,7 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                   className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-xl transition-all shadow-sm"
                 >
                   <MapPin size={18} />
-                  ดูใน Google Maps
+                  {t("property.viewInGoogleMaps")}
                 </a>
               </div>
             )}
@@ -257,7 +273,7 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
             {/* Features */}
             {features.length > 0 && (
               <div>
-                <h2 className="text-2xl font-bold text-foreground mb-6">Property Features</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-6">{t("property.features")}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-foreground/80">
                   {features.map((feature, idx) => (
                     <div key={idx} className="flex items-center gap-3">
@@ -276,19 +292,27 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
           <div className="lg:col-span-1">
             <div className="sticky top-24 bg-white dark:bg-primary-900/20 p-8 rounded-3xl shadow-xl shadow-primary-900/5 border border-primary-100 dark:border-primary-800">
               <div className="hidden lg:block mb-8 pb-8 border-b border-primary-100 dark:border-primary-800/50">
-                <div className="text-sm text-foreground/60 uppercase tracking-wider font-semibold mb-2">Asking Price</div>
+                <div className="text-sm text-foreground/60 uppercase tracking-wider font-semibold mb-2">{t("property.askingPrice")}</div>
                 <div className="text-4xl font-bold text-primary-600">{formattedPrice}</div>
               </div>
               
-              <h3 className="text-xl font-bold text-foreground mb-6">Interested in this property?</h3>
+              <h3 className="text-xl font-bold text-foreground mb-6">{t("property.interested")}</h3>
               <p className="text-sm text-foreground/70 mb-6">
-                Contact our local agents to schedule a viewing or ask any questions.
+                {t("property.contactAgent")}
               </p>
               
               <InquiryForm propertyId={property.id} propertyTitle={property.title} />
             </div>
           </div>
         </div>
+        
+        {/* Similar Properties Section */}
+        <SimilarProperties 
+          currentPropertyId={property.id}
+          location={property.location}
+          price={property.price}
+          type={property.type}
+        />
       </div>
     </div>
   );

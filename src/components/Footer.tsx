@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { MapPin, Phone, Mail, Instagram, Facebook } from "lucide-react";
 import NewsletterForm from "./NewsletterForm";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
+  
   return (
     <footer className="bg-primary-900 text-primary-50 py-16 border-t border-primary-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -11,12 +16,12 @@ export default function Footer() {
             <div>
               <h3 className="text-2xl font-bold tracking-tight mb-4 text-white">Chiang Mai Estates</h3>
               <p className="text-primary-200 mb-6 max-w-sm leading-relaxed">
-                Discover your perfect home in the Rose of the North. We curate the finest properties embracing the Lanna lifestyle and modern comfort.
+                {t("footer.description")}
               </p>
             </div>
             
             <div className="space-y-4">
-              <h4 className="text-sm font-bold uppercase tracking-widest text-primary-400">Subscribe for House Updates</h4>
+              <h4 className="text-sm font-bold uppercase tracking-widest text-primary-400">{t("footer.subscribeTitle")}</h4>
               <NewsletterForm />
             </div>
 
@@ -31,16 +36,16 @@ export default function Footer() {
           </div>
           
           <div>
-            <h4 className="text-lg font-semibold mb-4 text-white">Quick Links</h4>
+            <h4 className="text-lg font-semibold mb-4 text-white">{t("footer.quickLinks")}</h4>
             <ul className="space-y-3">
-              <li><Link href="/properties" className="text-primary-200 hover:text-white transition-colors">Properties</Link></li>
-              <li><Link href="/about" className="text-primary-200 hover:text-white transition-colors">About Us</Link></li>
-              <li><Link href="/contact" className="text-primary-200 hover:text-white transition-colors">Contact</Link></li>
+              <li><Link href="/properties" className="text-primary-200 hover:text-white transition-colors">{t("footer.properties")}</Link></li>
+              <li><Link href="/about" className="text-primary-200 hover:text-white transition-colors">{t("footer.about")}</Link></li>
+              <li><Link href="/contact" className="text-primary-200 hover:text-white transition-colors">{t("footer.contact")}</Link></li>
             </ul>
           </div>
           
           <div>
-            <h4 className="text-lg font-semibold mb-4 text-white">Contact</h4>
+            <h4 className="text-lg font-semibold mb-4 text-white">{t("footer.contactTitle")}</h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <MapPin size={20} className="text-accent-500 shrink-0 mt-1" />
@@ -59,10 +64,10 @@ export default function Footer() {
         </div>
         
         <div className="mt-12 pt-8 border-t border-primary-800/50 flex flex-col md:flex-row justify-between items-center text-primary-200/60 text-sm">
-          <p>&copy; {new Date().getFullYear()} Chiang Mai Estates. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Chiang Mai Estates. {t("footer.rights")}</p>
           <div className="mt-4 md:mt-0 space-x-4">
-            <Link href="#" className="hover:text-primary-200 transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-primary-200 transition-colors">Terms of Service</Link>
+            <Link href="#" className="hover:text-primary-200 transition-colors">{t("footer.privacy")}</Link>
+            <Link href="#" className="hover:text-primary-200 transition-colors">{t("footer.terms")}</Link>
           </div>
         </div>
       </div>

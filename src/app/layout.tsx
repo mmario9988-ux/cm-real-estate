@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Prompt } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Providers from "@/components/Providers";
 import { GoogleAnalytics } from '@next/third-parties/google';
 import "./globals.css";
 
@@ -58,11 +59,13 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${prompt.variable} antialiased min-h-screen flex flex-col`}
       >
-        <Navbar />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
+        <Providers>
+          <Navbar />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+        </Providers>
         {process.env.NEXT_PUBLIC_GA_ID && (
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
         )}
