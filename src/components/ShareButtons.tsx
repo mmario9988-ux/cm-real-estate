@@ -7,9 +7,10 @@ import { useState } from "react";
 interface ShareButtonsProps {
   url: string;
   title: string;
+  variant?: "property" | "minimal";
 }
 
-const ShareButtons: React.FC<ShareButtonsProps> = ({ url, title }) => {
+const ShareButtons: React.FC<ShareButtonsProps> = ({ url, title, variant = "property" }) => {
   const [copied, setCopied] = useState(false);
   const encodedUrl = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
@@ -27,6 +28,47 @@ const ShareButtons: React.FC<ShareButtonsProps> = ({ url, title }) => {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  if (variant === "minimal") {
+    return (
+      <div className="flex items-center gap-3">
+        {/* Facebook */}
+        <a 
+          href={shareLinks.facebook}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="p-2.5 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all shadow-sm"
+          title="Share on Facebook"
+        >
+          <Facebook size={20} />
+        </a>
+
+        {/* LINE (Using Share2 icon to match screenshot if preferred, or the LINE logo) */}
+        <a 
+          href={shareLinks.line}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="p-2.5 bg-sky-50 text-sky-500 rounded-full hover:bg-sky-500 hover:text-white transition-all shadow-sm"
+          title="Share on LINE"
+        >
+          <Share2 size={20} />
+        </a>
+
+        {/* Copy Link */}
+        <button 
+          onClick={copyToClipboard}
+          className={`p-2.5 rounded-full transition-all shadow-sm ${
+            copied 
+            ? "bg-green-500 text-white" 
+            : "bg-gray-50 text-gray-600 hover:bg-gray-600 hover:text-white"
+          }`}
+          title={copied ? "Copied!" : "Copy Link"}
+        >
+          {copied ? <Check size={20} /> : <LinkIcon size={20} />}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4 py-6 border-t border-primary-100 mt-8">

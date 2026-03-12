@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, User, Share2, Facebook, Twitter, Link as LinkIcon } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import ShareButtons from "@/components/ShareButtons";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -24,7 +25,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: post.title,
       description: post.excerpt || "",
-      images: post.image ? [post.image] : [],
+      images: post.image 
+        ? [{ url: post.image, width: 1200, height: 630, alt: post.title }]
+        : [{ url: "/hero-bg.jpg", width: 1200, height: 630, alt: post.title }],
+      type: 'article',
+      publishedTime: post.createdAt.toISOString(),
     }
   };
 }
@@ -71,17 +76,11 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
             {post.title}
           </h1>
 
-          <div className="flex items-center gap-3">
-            <button className="p-2.5 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all shadow-sm" title="Share on Facebook">
-              <Facebook size={20} />
-            </button>
-            <button className="p-2.5 bg-sky-50 text-sky-500 rounded-full hover:bg-sky-500 hover:text-white transition-all shadow-sm" title="Share on Twitter">
-              <Share2 size={20} />
-            </button>
-            <button className="p-2.5 bg-gray-50 text-gray-600 rounded-full hover:bg-gray-600 hover:text-white transition-all shadow-sm" title="Copy Link">
-              <LinkIcon size={20} />
-            </button>
-          </div>
+          <ShareButtons 
+            url={`https://cm-real-estate.vercel.app/blog/${post.slug}`} 
+            title={post.title} 
+            variant="minimal"
+          />
         </div>
       </div>
 
