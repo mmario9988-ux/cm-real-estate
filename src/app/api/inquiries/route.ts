@@ -20,8 +20,8 @@ export async function POST(req: Request) {
 
     // Send Auto-Responder Email
     try {
-      await resend.emails.send({
-        from: 'Chiang Mai Estates <m.mario9988@gmail.com>',
+      const { data: emailData, error: emailError } = await resend.emails.send({
+        from: 'Chiang Mai Estates <onboarding@resend.dev>',
         to: email,
         subject: 'ขอบคุณที่สนใจโครงการจาก Chiang Mai Estates (Inquiry Confirmation)',
         html: `
@@ -97,14 +97,17 @@ export async function POST(req: Request) {
           </html>
         `
       });
+      if (emailError) {
+        console.error("Auto-responder email failed details:", emailError);
+      }
     } catch (emailError) {
-      console.error("Auto-responder email failed:", emailError);
+      console.error("Auto-responder email catch error:", emailError);
     }
 
     // Send Admin Notification Email
     try {
-      await resend.emails.send({
-        from: 'Chiang Mai Estates <m.mario9988@gmail.com>',
+      const { data: adminData, error: adminError } = await resend.emails.send({
+        from: 'Chiang Mai Estates <onboarding@resend.dev>',
         to: 'm.mario9988@gmail.com',
         subject: `New Inquiry from ${name}`,
         html: `
@@ -120,27 +123,47 @@ export async function POST(req: Request) {
           </div>
         `
       });
+      if (adminError) {
+        console.error("Admin notification email failed details:", adminError);
+      }
     } catch (adminEmailError) {
-      console.error("Admin notification email failed:", adminEmailError);
+      console.error("Admin notification email catch error:", adminEmailError);
     }
     
-    // Send LINE Notification to Admin (Instant Alert)
+    // Send Telegram Notification to Admin (Instant Alert)
     try {
-      const lineToken = process.env.LINE_NOTIFY_TOKEN;
-      if (lineToken) {
-        const lineMessage = `\n🔔 New Website Inquiry!\n\n👤 Name: ${name}\n📞 Phone: ${phone || '-'}\n📧 Email: ${email}\n\n💬 Message: ${message}`;
+      const botToken = process.env.TELEGRAM_BOT_TOKEN;
+      const chatId = process.env.TELEGRAM_CHAT_ID;
+      
+      if (botToken && chatId) {
+        const telegramMessage = `
+<b>🔔 New Website Inquiry!</b>
+
+<b>👤 Name:</b> ${name}
+<b>📞 Phone:</b> ${phone || '-'}
+<b>📧 Email:</b> ${email}
+
+<b>💬 Message:</b>
+${message}
+        `.trim();
         
-        await fetch('https://notify-api.line.me/api/notify', {
+        const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Bearer ${lineToken}`
-          },
-          body: new URLSearchParams({ message: lineMessage })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: telegramMessage,
+            parse_mode: 'HTML'
+          })
         });
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`Telegram response error [${response.status}]:`, errorText);
+        }
       }
-    } catch (lineError) {
-      console.error("LINE notification failed:", lineError);
+    } catch (telegramError) {
+      console.error("Telegram notification failed:", telegramError);
     }
     
     return NextResponse.json(inquiry, { status: 201 });
