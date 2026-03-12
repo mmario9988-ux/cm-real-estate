@@ -124,6 +124,25 @@ export async function POST(req: Request) {
       console.error("Admin notification email failed:", adminEmailError);
     }
     
+    // Send LINE Notification to Admin (Instant Alert)
+    try {
+      const lineToken = process.env.LINE_NOTIFY_TOKEN;
+      if (lineToken) {
+        const lineMessage = `\n🔔 New Website Inquiry!\n\n👤 Name: ${name}\n📞 Phone: ${phone || '-'}\n📧 Email: ${email}\n\n💬 Message: ${message}`;
+        
+        await fetch('https://notify-api.line.me/api/notify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${lineToken}`
+          },
+          body: new URLSearchParams({ message: lineMessage })
+        });
+      }
+    } catch (lineError) {
+      console.error("LINE notification failed:", lineError);
+    }
+    
     return NextResponse.json(inquiry, { status: 201 });
   } catch(error: any) {
     return NextResponse.json({ error: error.message || "Failed to submit inquiry" }, { status: 500 });
