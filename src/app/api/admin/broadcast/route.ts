@@ -3,12 +3,14 @@ import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { Resend } from "resend";
 
+import { isAuthorizedAdmin } from "@/lib/auth-utils";
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
     const session = await auth();
-    if (!session) {
+    if (!isAuthorizedAdmin(session)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

@@ -39,3 +39,12 @@ body {
 .bg-hero-pattern {
   background-image: url('/hero-bg.jpg');
 }
+
+@keyframes shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.animate-shine {
+  animation: shine 3s infinite;
+}

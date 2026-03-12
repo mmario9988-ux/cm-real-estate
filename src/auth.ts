@@ -4,9 +4,14 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import prisma from "./lib/prisma"
 import bcrypt from "bcryptjs"
 
+import Google from "next-auth/providers/google"
+import Facebook from "next-auth/providers/facebook"
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
+    Google,
+    Facebook,
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -49,6 +54,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: {
     strategy: "jwt"
   },
+  trustHost: true,
+  debug: process.env.NODE_ENV === "development",
   callbacks: {
     async jwt({ token, user }) {
       if (user) {

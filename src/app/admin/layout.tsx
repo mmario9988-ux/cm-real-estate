@@ -9,9 +9,10 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+  const adminEmails = (process.env.ADMIN_EMAILS || "").split(",");
 
-  if (!session?.user) {
-    redirect("/login");
+  if (!session?.user || !session.user.email || !adminEmails.includes(session.user.email)) {
+    redirect("/");
   }
 
   return (

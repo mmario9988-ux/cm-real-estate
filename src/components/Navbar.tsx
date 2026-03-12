@@ -2,15 +2,19 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, ChevronDown, Bell, Search, Smartphone, Globe, Heart } from "lucide-react";
+import { Menu, X, ChevronDown, Bell, Search, Smartphone, Globe, Heart, LogOut, LayoutDashboard, LogIn } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useFavorites } from "@/context/FavoritesContext";
+import LoginModal from "./LoginModal";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const { count } = useFavorites();
+  const { data: session } = useSession();
 
   const navLinks = [
     { name: t("navbar.buy"), href: "/properties?status=For+Sale", hasDropdown: true },
@@ -90,13 +94,84 @@ export default function Navbar() {
               <ChevronDown size={14} className="text-gray-500 ml-1" />
             </Link>
 
-            {/* Login */}
-            <Link
-              href="/admin"
-              className="bg-primary-700 hover:bg-primary-800 text-white px-5 py-2 rounded-full text-[15px] font-medium transition-colors"
-            >
-              {t("navbar.login")}
-            </Link>
+            {/* Login / Profile */}
+            {session ? (
+              <div className="relative group">
+                <button className="flex items-center gap-3 p-1.5 pr-4 pl-1.5 rounded-full bg-gray-50 border border-gray-200 hover:border-primary-500 hover:bg-primary-50 transition-all duration-300 shadow-sm overflow-hidden whitespace-nowrap">
+                  <div className="relative inline-block flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full border-2 border-primary-600 p-[1px] shadow-sm transform group-hover:scale-105 transition-transform duration-300">
+                      {session.user?.image ? (
+                        <img 
+                          src={session.user.image} 
+                          alt={session.user.name || "User"} 
+                          className="w-full h-full rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-sm">
+                          {session.user?.name?.[0] || "U"}
+                        </div>
+                      )}
+                    </div>
+                    {/* Verified Status Dot */}
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center shadow-sm">
+                      <svg viewBox="0 0 12 12" className="w-2.5 h-2.5 text-white fill-current" stroke="currentColor" strokeWidth="1">
+                        <path d="M10 3L4.5 8.5L2 6" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-start pr-1 max-w-[120px]">
+                    <span className="text-sm font-bold text-gray-900 truncate w-full">
+                      {session.user?.name || "Member"}
+                    </span>
+                    <span className="text-[10px] font-bold text-blue-600 flex items-center gap-0.5 uppercase tracking-wider">
+                      Verified Member
+                    </span>
+                  </div>
+                  <ChevronDown size={14} className="text-gray-400 group-hover:text-primary-600 transition-colors" />
+                </button>
+
+                {/* Dropdown Menu */}
+                <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-2xl shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 z-[60]">
+                  <div className="px-5 py-3 border-b border-gray-100 mb-2">
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1">Account</p>
+                    <p className="text-sm font-bold text-gray-900 truncate">{session.user?.email}</p>
+                  </div>
+                  
+                  {/* Admin link - only show if on ADMIN_EMAILS list */}
+                  {(() => {
+                    const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "m.mario9988@gmail.com").split(",");
+                    if (session.user?.email && adminEmails.includes(session.user.email)) {
+                      return (
+                        <Link href="/admin" className="flex items-center gap-3 px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors">
+                          <LayoutDashboard size={18} className="text-primary-600" />
+                          {t("admin.portal") || "Admin Portal"}
+                        </Link>
+                      );
+                    }
+                    return null;
+                  })()}
+
+                  <button 
+                    onClick={() => signOut()}
+                    className="flex items-center gap-3 px-5 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors w-full text-left"
+                  >
+                    <LogOut size={18} />
+                    {t("navbar.logout") || "Sign Out"}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsLoginModalOpen(true)}
+                className="relative overflow-hidden group bg-primary-700 text-white px-6 py-2.5 rounded-full text-[15px] font-bold transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_20px_rgba(220,38,38,0.4)] flex items-center gap-2 cursor-pointer"
+              >
+                {/* Shine Effect */}
+                <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover:animate-shine" />
+                
+                <LogIn size={18} className="group-hover:rotate-12 transition-transform duration-300" />
+                {t("navbar.login")}
+              </button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -125,7 +200,7 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="lg:hidden bg-white border-b border-gray-200 absolute w-full left-0 top-full shadow-lg">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <div className="px-3 pt-2 pb-3 space-y-1 sm:px-3">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -145,16 +220,79 @@ export default function Navbar() {
               {count > 0 && <span className="bg-accent-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{count}</span>}
             </Link>
             <div className="border-t border-gray-200 my-2 pt-2"></div>
-            <Link
-              href="/admin"
-              className="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-primary-50"
-              onClick={() => setIsOpen(false)}
-            >
-              {t("navbar.login")}
-            </Link>
+            {session ? (
+               <div className="px-3 py-2 space-y-3">
+                  <div className="flex items-center gap-3 pb-3 border-b border-gray-100">
+                    <div className="w-12 h-12 rounded-full border-2 border-primary-600 p-[1px] shadow-sm">
+                      {session.user?.image ? (
+                        <img 
+                          src={session.user.image} 
+                          alt={session.user.name || "User"} 
+                          className="w-full h-full rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-lg">
+                          {session.user?.name?.[0] || "U"}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-base font-bold text-gray-900">{session.user?.name || "Member"}</span>
+                      <span className="text-xs font-bold text-blue-600 flex items-center gap-0.5 uppercase tracking-wider">
+                        Verified Member
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {(() => {
+                    const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "m.mario9988@gmail.com").split(",");
+                    if (session.user?.email && adminEmails.includes(session.user.email)) {
+                      return (
+                        <Link 
+                          href="/admin" 
+                          className="flex items-center gap-3 py-2 font-bold text-gray-900"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <LayoutDashboard size={20} className="text-primary-600" />
+                          {t("admin.portal") || "Admin Portal"}
+                        </Link>
+                      );
+                    }
+                    return null;
+                  })()}
+
+                  <button 
+                    onClick={() => {
+                      signOut();
+                      setIsOpen(false);
+                    }} 
+                    className="flex items-center gap-3 py-2 text-red-600 font-bold w-full text-left"
+                  >
+                    <LogOut size={20} />
+                    {t("navbar.logout") || "Sign Out"}
+                  </button>
+               </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setIsLoginModalOpen(true);
+                  setIsOpen(false);
+                }}
+                className="mx-3 mt-4 flex items-center justify-center gap-2 bg-primary-700 text-white px-5 py-3 rounded-full text-base font-bold shadow-md active:scale-95 transition-all cursor-pointer"
+              >
+                <LogIn size={20} />
+                {t("navbar.login")}
+              </button>
+            )}
           </div>
         </div>
       )}
+
+      {/* Login Modal */}
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
     </nav>
   );
 }

@@ -1,9 +1,26 @@
+import { auth } from "@/auth";
+import { isAuthorizedAdmin } from "@/lib/auth-utils";
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+export const proxy = auth((req) => {
+  const { pathname } = req.nextUrl;
   
+  // --- Security Logic ---
+  const isAdminPath = pathname.startsWith("/admin");
+  const isApiAdminPath = pathname.startsWith("/api/admin");
+
+  if (isAdminPath || isApiAdminPath) {
+    if (!req.auth) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+    
+    if (!isAuthorizedAdmin(req.auth)) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+  }
+  // ----------------------
+
   // Skip API routes, Next internal routes, and static files
   if (
     pathname.startsWith('/api') ||
@@ -21,7 +38,7 @@ export function proxy(request: NextRequest) {
     const restPath = matches[2] || '/';
     
     // Rewrite the URL to remove the language prefix (e.g. /en/properties -> /properties)
-    const url = request.nextUrl.clone();
+    const url = req.nextUrl.clone();
     url.pathname = restPath;
     
     const response = NextResponse.rewrite(url);
@@ -32,4 +49,7 @@ export function proxy(request: NextRequest) {
   }
 
   return NextResponse.next();
-}
+});
+
+// For compatibility with scripts/tools that might expect default export
+export default proxy;

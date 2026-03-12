@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { auth } from "@/auth";
+import { isAuthorizedAdmin } from "@/lib/auth-utils";
 
 export async function GET(
   request: Request,
@@ -28,6 +30,11 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
+    const session = await auth();
+    if (!isAuthorizedAdmin(session)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    
     const body = await request.json();
     const { title, excerpt, content, image, published, slug } = body;
 
@@ -56,6 +63,11 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+    const session = await auth();
+    if (!isAuthorizedAdmin(session)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    
     await prisma.post.delete({
       where: { id },
     });
