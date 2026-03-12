@@ -6,6 +6,7 @@ import ImageGallery from "@/components/ImageGallery";
 import ViewTracker from "@/components/ViewTracker";
 import JsonLd from "@/components/JsonLd";
 import SimilarProperties from "@/components/SimilarProperties";
+import ShareButtons from "@/components/ShareButtons";
 import { getTranslation, getLanguage } from "@/lib/i18n-server";
 
 export const dynamic = "force-dynamic";
@@ -211,6 +212,12 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                 {property.description}
               </div>
             </div>
+
+            {/* Share Buttons */}
+            <ShareButtons 
+              url={`https://cm-real-estate.vercel.app/properties/${property.id}`} 
+              title={property.title} 
+            />
 
             {/* Facilities */}
             <div>
