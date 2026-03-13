@@ -29,7 +29,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
   const handleSocialLogin = async (provider: string) => {
     setLoading(provider);
-    await signIn(provider, { callbackUrl: "/admin" });
+    await signIn(provider, { callbackUrl: "/" });
   };
 
   const handleEmailContinue = (e: React.FormEvent) => {

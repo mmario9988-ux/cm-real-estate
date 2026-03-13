@@ -10,8 +10,8 @@ import Facebook from "next-auth/providers/facebook"
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
-    Google,
-    Facebook,
+    Google({ allowDangerousEmailAccountLinking: true }),
+    Facebook({ allowDangerousEmailAccountLinking: true }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
