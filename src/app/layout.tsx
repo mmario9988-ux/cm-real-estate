@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
 import FloatingChat from "@/components/FloatingChat";
 import { GoogleAnalytics } from '@next/third-parties/google';
+import { getLanguage } from "@/lib/i18n-server";
 import "./globals.css";
 
 const inter = Inter({
@@ -45,18 +46,26 @@ export const metadata: Metadata = {
     locale: "th_TH",
     type: "website",
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'เชียงใหม่ เอสเตทส์ - บ้านเช่า คอนโด ขายบ้าน เชียงใหม่',
+    description: 'รวมประกาศเช่าและขายบ้าน คอนโด ที่ดิน ในเชียงใหม่ ครบจบในที่เดียว',
+    images: ['/hero-bg.jpg'],
+  },
   alternates: {
     canonical: "/",
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const lang = await getLanguage();
+  
   return (
-    <html lang="th">
+    <html lang={lang}>
       <body
         className={`${inter.variable} ${prompt.variable} antialiased min-h-screen flex flex-col`}
       >

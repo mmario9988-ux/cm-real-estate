@@ -76,6 +76,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
           alt: `${seoPrefix} ${property.title}`,
         }
       ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoTitle,
+      description: property.description.substring(0, 160) + "...",
+      images: [ogImage],
     }
   };
 }
@@ -109,22 +115,49 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
 
   const jsonLdData = {
     "@context": "https://schema.org",
-    "@type": "RealEstateListing",
+    "@type": "SingleFamilyResidence",
     "name": property.title,
     "description": property.description,
     "url": `https://cm-real-estate.vercel.app/properties/${property.id}`,
     "image": images,
+    "numberOfRooms": property.bedrooms,
+    "numberOfBathroomsTotal": property.bathrooms,
+    "floorSize": property.area ? {
+      "@type": "QuantitativeValue",
+      "value": property.area,
+      "unitCode": "MTK"
+    } : undefined,
     "address": {
       "@type": "PostalAddress",
       "addressLocality": property.location,
       "addressRegion": "Chiang Mai",
       "addressCountry": "TH"
     },
+    "amenityFeature": features.map(f => ({
+      "@type": "LocationFeatureSpecification",
+      "name": f,
+      "value": true
+    })),
+    "accommodationCategory": property.type,
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "Aircon Count",
+        "value": property.airconCount
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Parking Count",
+        "value": property.parkingCount
+      }
+    ],
     "offer": {
       "@type": "Offer",
       "price": property.price,
       "priceCurrency": "THB",
-      "availability": property.status === "Available" ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+      "availability": property.status === "Available" || property.status === "For Rent" || property.status === "For Sale" 
+        ? "https://schema.org/InStock" 
+        : "https://schema.org/OutOfStock"
     }
   };
 

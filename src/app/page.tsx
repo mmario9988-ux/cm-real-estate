@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Mountain, Sun, Home as HomeIcon } from "lucide-react";
 import PropertyCard from "@/components/PropertyCard";
 import HeroSearchBox from "@/components/HeroSearchBox";
@@ -50,8 +51,15 @@ export default async function Home() {
         <div className="relative h-[360px] md:h-[440px] w-full bg-primary-100">
           {/* Main Background Image */}
           <div 
-            className="absolute inset-0 bg-cover bg-center bg-hero-pattern"
+            className="absolute inset-0"
           >
+            <Image 
+              src="/hero-bg.jpg" 
+              alt="Chiang Mai Estates Hero" 
+              fill 
+              priority
+              className="object-cover object-center"
+            />
             {/* Dark Overlay for better text/gradient visibility (Optional) */}
             <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/40 to-transparent"></div>
           </div>
@@ -155,7 +163,12 @@ export default async function Home() {
                 <article key={post.id} className="group bg-white rounded-3xl overflow-hidden border border-gray-100 hover:border-primary-200 transition-all duration-300 hover:shadow-2xl hover:shadow-primary-900/5 flex flex-col">
                   <Link href={`/blog/${post.slug}`} className="block relative aspect-[16/10] overflow-hidden">
                     {post.image ? (
-                      <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                      <Image 
+                        src={post.image} 
+                        alt={post.title} 
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110" 
+                      />
                     ) : (
                       <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-300 italic">No Image</div>
                     )}

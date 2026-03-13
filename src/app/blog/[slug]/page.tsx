@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { ArrowLeft, Calendar, User, Share2, Facebook, Twitter, Link as LinkIcon } from "lucide-react";
+import Image from "next/image";
+import { ArrowLeft, Calendar, User, CalendarDays } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import ShareButtons from "@/components/ShareButtons";
+import JsonLd from "@/components/JsonLd";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -11,6 +13,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   });
 
   if (!post || !post.published) return { title: "Post Not Found" };
+
+  const ogImage = post.image || "/hero-bg.jpg";
 
   return {
     title: `${post.title} | Chiang Mai Estates Blog`,
@@ -25,11 +29,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: post.title,
       description: post.excerpt || "",
-      images: post.image 
-        ? [{ url: post.image, width: 1200, height: 630, alt: post.title }]
-        : [{ url: "/hero-bg.jpg", width: 1200, height: 630, alt: post.title }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: post.title }],
       type: 'article',
       publishedTime: post.createdAt.toISOString(),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt || "",
+      images: [ogImage],
     }
   };
 }
@@ -44,8 +52,24 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
     notFound();
   }
 
+  const jsonLdData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "image": post.image ? [post.image] : [],
+    "datePublished": post.createdAt.toISOString(),
+    "dateModified": post.updatedAt.toISOString(),
+    "author": [{
+        "@type": "Organization",
+        "name": "Chiang Mai Estates",
+        "url": "https://cm-real-estate.vercel.app"
+    }],
+    "description": post.excerpt || post.title
+  };
+
   return (
     <div className="bg-background min-h-screen pb-24">
+      <JsonLd data={jsonLdData} />
       {/* Hero Header */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -87,8 +111,14 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
       {/* Main Image */}
       {post.image && (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 mb-16">
-          <div className="aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl shadow-primary-900/10 border-4 border-white">
-            <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+          <div className="relative aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl shadow-primary-900/10 border-4 border-white">
+            <Image 
+              src={post.image} 
+              alt={post.title} 
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
         </div>
       )}
