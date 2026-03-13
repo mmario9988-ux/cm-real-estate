@@ -63,51 +63,62 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             <p className="text-gray-500 text-sm font-medium">เข้าสู่ระบบ หรือสมัครสมาชิก เพื่อประสบการณ์การใช้งานที่ดีที่สุด</p>
           </div>
 
-          <div className="space-y-4">
-            {/* Social Buttons */}
-            <div className="space-y-3">
-              <button 
-                onClick={() => handleSocialLogin("google")}
-                disabled={!!loading}
-                className="w-full flex items-center justify-center gap-3 py-3.5 border-2 border-gray-100 rounded-2xl font-bold text-gray-700 hover:bg-gray-50 transition-all relative overflow-hidden group"
-              >
-                {loading === "google" ? (
-                  <Loader2 size={20} className="animate-spin text-gray-400" />
-                ) : (
-                  <>
-                    <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5 grayscale group-hover:grayscale-0 transition-all opacity-70 group-hover:opacity-100" />
-                    ดำเนินการต่อด้วย Google
-                  </>
-                )}
-              </button>
+            <div className="space-y-4">
+              {/* Social Buttons */}
+              <div className="space-y-4">
+                <button 
+                  onClick={() => handleSocialLogin("google")}
+                  disabled={!!loading}
+                  className="w-full flex items-center justify-center gap-4 py-4.5 border-2 border-gray-100/80 rounded-[24px] font-black text-gray-800 hover:bg-gray-50 hover:border-primary-100 hover:shadow-xl hover:shadow-primary-600/5 transition-all relative overflow-hidden group"
+                >
+                  {loading === "google" ? (
+                    <Loader2 size={24} className="animate-spin text-primary-500" />
+                  ) : (
+                    <>
+                      <div className="bg-white p-1.5 rounded-lg shadow-sm border border-gray-50 group-hover:scale-110 transition-transform">
+                        <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5 grayscale group-hover:grayscale-0 transition-all" />
+                      </div>
+                      <span className="text-base">ดำเนินการต่อด้วย Google</span>
+                    </>
+                  )}
+                </button>
 
-              <button 
-                onClick={() => handleSocialLogin("facebook")}
-                disabled={!!loading}
-                className="w-full flex items-center justify-center gap-3 py-3.5 border-2 border-gray-100 rounded-2xl font-bold text-gray-700 hover:bg-gray-50 transition-all relative group"
-              >
-                 {loading === "facebook" ? (
-                  <Loader2 size={20} className="animate-spin text-gray-400" />
-                ) : (
-                  <>
-                    <svg className="w-5 h-5 text-[#1877F2] opacity-70 group-hover:opacity-100 transition-opacity fill-current" viewBox="0 0 24 24">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                    </svg>
-                    ดำเนินการต่อด้วย Facebook
-                  </>
-                )}
-              </button>
+                <button 
+                  onClick={() => handleSocialLogin("facebook")}
+                  disabled={!!loading}
+                  className="w-full flex items-center justify-center gap-4 py-4.5 border-2 border-gray-100/80 rounded-[24px] font-black text-gray-800 hover:bg-gray-50 hover:border-blue-100 hover:shadow-xl hover:shadow-blue-600/5 transition-all relative group"
+                >
+                   {loading === "facebook" ? (
+                    <Loader2 size={24} className="animate-spin text-blue-500" />
+                  ) : (
+                    <>
+                      <div className="bg-[#1877F2]/10 p-1.5 rounded-lg group-hover:bg-[#1877F2]/20 transition-colors">
+                        <svg className="w-5 h-5 text-[#1877F2] fill-current" viewBox="0 0 24 24">
+                          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                      </div>
+                      <span className="text-base">ดำเนินการต่อด้วย Facebook</span>
+                    </>
+                  )}
+                </button>
+              </div>
 
-              <button 
-                className="w-full flex items-center justify-center gap-3 py-3.5 border-2 border-gray-100 rounded-2xl font-bold text-gray-700 hover:bg-gray-50 transition-all relative group"
-              >
-                <svg className="w-5 h-5 text-black opacity-70 group-hover:opacity-100 transition-opacity fill-current" viewBox="0 0 24 24">
-                  <path d="M17.073 2.302c-1.229 0-2.583.719-3.238 1.144-.655-.425-2.009-1.144-3.238-1.144-2.822 0-5.11 2.228-5.11 4.977 0 3.321 3.25 7.151 7.15 11.05 1.198 1.198 2.054 2.054 2.435 2.435.38-.381 1.237-1.237 2.435-2.435 3.9-3.9 7.15-7.729 7.15-11.05 0-2.749-2.288-4.977-5.11-4.977z"/>
-                </svg>
-                ดำเนินการต่อด้วย Apple
-              </button>
+              {/* Trust & Security Section */}
+              <div className="pt-6 mt-4 border-t border-gray-50 flex items-center justify-center gap-6 opacity-60">
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">SSL Secure</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Private Access</span>
+                </div>
+              </div>
             </div>
-          </div>
 
           {/* Footer Terms */}
           <p className="mt-8 text-[11px] text-gray-400 text-center leading-relaxed">

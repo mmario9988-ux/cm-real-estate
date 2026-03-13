@@ -50,14 +50,14 @@ export default function LoginForm() {
           type="button"
           onClick={() => handleSocialLogin("google")}
           disabled={!!loading}
-          className="flex items-center justify-center gap-3 py-4 px-4 bg-white border border-primary-100 rounded-2xl font-bold text-primary-900 hover:bg-primary-50 hover:border-primary-200 transition-all shadow-sm active:scale-[0.98] disabled:opacity-50"
+          className="flex items-center justify-center gap-3 py-4.5 px-6 bg-white border border-primary-100/60 rounded-2xl font-black text-primary-900 hover:bg-primary-50/50 hover:border-primary-200 hover:shadow-lg hover:shadow-primary-600/5 transition-all active:scale-[0.98] disabled:opacity-50 group"
         >
           {loading === "google" ? (
             <Loader2 size={20} className="animate-spin text-primary-400" />
           ) : (
             <>
               <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5 grayscale group-hover:grayscale-0 transition-all opacity-80" />
-              <span className="text-sm">Google</span>
+              <span className="text-[15px]">Google</span>
             </>
           )}
         </button>
@@ -66,16 +66,16 @@ export default function LoginForm() {
           type="button"
           onClick={() => handleSocialLogin("facebook")}
           disabled={!!loading}
-          className="flex items-center justify-center gap-3 py-4 px-4 bg-white border border-primary-100 rounded-2xl font-bold text-primary-900 hover:bg-primary-50 hover:border-primary-200 transition-all shadow-sm active:scale-[0.98] disabled:opacity-50"
+          className="flex items-center justify-center gap-3 py-4.5 px-6 bg-white border border-primary-100/60 rounded-2xl font-black text-primary-900 hover:bg-primary-50/50 hover:border-primary-200 hover:shadow-lg hover:shadow-primary-600/5 transition-all active:scale-[0.98] disabled:opacity-50 group"
         >
           {loading === "facebook" ? (
             <Loader2 size={20} className="animate-spin text-primary-400" />
           ) : (
             <>
-              <svg className="w-5 h-5 text-[#1877F2] fill-current" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[#1877F2] fill-current opacity-80 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
               </svg>
-              <span className="text-sm">Facebook</span>
+              <span className="text-[15px]">Facebook</span>
             </>
           )}
         </button>
@@ -143,8 +143,10 @@ export default function LoginForm() {
           )}
         </button>
 
-        <p className="text-center text-[10px] text-primary-300 font-bold uppercase tracking-widest pt-2">
-          Authorized Personnel Only
+        <p className="text-center text-[10px] text-primary-300 font-black uppercase tracking-[0.2em] pt-2 flex items-center justify-center gap-2">
+          <span className="w-8 h-[1px] bg-primary-100"></span>
+          Secure & Private Portal
+          <span className="w-8 h-[1px] bg-primary-100"></span>
         </p>
       </form>
     </div>
