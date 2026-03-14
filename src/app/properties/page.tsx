@@ -1,8 +1,9 @@
 import prisma from "@/lib/prisma";
 import PropertyCard from "@/components/PropertyCard";
-import Link from "next/link";
-import { Filter, Home, Banknote, Bed, X, Search, MapPin } from "lucide-react";
+import PropertyFilters from "@/components/PropertyFilters";
+import { Search } from "lucide-react";
 import { getTranslation, getLanguage } from "@/lib/i18n-server";
+import Link from "next/link";
 
 const ZONES = [
   "เมืองเชียงใหม่",
@@ -115,161 +116,38 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-10">
-          {/* Sidebar Filters */}
-          <aside className="lg:w-72 flex-shrink-0">
-            <div className="bg-white rounded-3xl p-8 border border-primary-100 shadow-sm sticky top-24">
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-lg font-black text-primary-950 flex items-center gap-2">
-                  <Filter size={18} className="text-primary-600" />
-                  {t("hero.filters")}
-                </h3>
-                <Link href="/properties" className="text-[9px] font-black uppercase tracking-widest text-primary-400 hover:text-primary-600 transition-colors border-b border-transparent hover:border-primary-600">
-                  {t("filters.clearAll")}
-                </Link>
-              </div>
+        {/* Horizontal Filter Bar */}
+        <PropertyFilters 
+          zones={ZONES}
+          priceRanges={PRICE_RANGES}
+          propertyTypes={propertyTypes}
+        />
 
-              <div className="space-y-10">
-                {/* Status Filter */}
-                <div className="space-y-4">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary-400 block">{t("filters.status")}</span>
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      { label: t("filters.sale"), value: "For Sale" },
-                      { label: t("filters.rent"), value: "For Rent" }
-                    ].map((s) => (
-                      <Link 
-                        key={s.value}
-                        href={{ query: { ...params, status: s.value } }}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border-2 ${
-                          statusParam === s.value 
-                          ? "bg-primary-950 border-primary-950 text-white" 
-                          : "bg-white border-primary-50 text-primary-900 hover:border-primary-200"
-                        }`}
-                      >
-                        {s.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Zone Filter */}
-                <div className="space-y-4">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary-400 block group flex items-center gap-2">
-                    <MapPin size={12} className="text-primary-600" /> {t("filters.zone")}
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    {ZONES.map((z) => (
-                      <Link 
-                        key={z}
-                        href={{ query: { ...params, location: locationParam === z ? undefined : z } }}
-                        className={`px-3 py-2 rounded-xl text-xs font-bold transition-all border-2 ${
-                          locationParam === z 
-                          ? "bg-primary-950 border-primary-950 text-white" 
-                          : "bg-white border-primary-50 text-primary-900 hover:border-primary-200"
-                        }`}
-                      >
-                        {z}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Price Filter */}
-                <div className="space-y-4">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary-400 block flex items-center gap-2">
-                    <Banknote size={12} className="text-primary-600" /> {t("filters.price")}
-                  </span>
-                  <div className="grid grid-cols-1 gap-2">
-                    {PRICE_RANGES.map((r, idx) => (
-                      <Link 
-                        key={idx}
-                        href={{ query: { ...params, minPrice: r.min, maxPrice: r.max } }}
-                        className={`px-4 py-3 rounded-xl text-xs font-bold transition-all border-2 text-left ${
-                          parseInt(params.minPrice as string) === r.min && parseInt(params.maxPrice as string) === r.max
-                          ? "bg-primary-50 border-primary-500 text-primary-950 shadow-sm" 
-                          : "bg-white border-primary-50 text-primary-600 hover:border-primary-100"
-                        }`}
-                      >
-                        {r.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Type Filter */}
-                <div className="space-y-4">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary-400 block flex items-center gap-2">
-                    <Home size={12} className="text-primary-600" /> {t("filters.type")}
-                  </span>
-                  <div className="grid grid-cols-2 gap-2">
-                    {propertyTypes.map((pt) => (
-                      <Link 
-                        key={pt.value}
-                        href={{ query: { ...params, type: typeParam === pt.value ? undefined : pt.value } }}
-                        className={`flex items-center justify-center px-4 py-3 rounded-xl text-xs font-bold transition-all border-2 ${
-                          typeParam === pt.value 
-                          ? "bg-primary-50 border-primary-500 text-primary-950 shadow-sm" 
-                          : "bg-white border-primary-50 text-primary-600 hover:border-primary-100"
-                        }`}
-                      >
-                        {pt.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Bedrooms Filter */}
-                <div className="space-y-4">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary-400 block flex items-center gap-2">
-                    <Bed size={12} className="text-primary-600" /> {t("filters.bedrooms")}
-                  </span>
-                  <div className="flex justify-between gap-1">
-                    {[1, 2, 3, 4, 5].map((b) => (
-                      <Link 
-                        key={b}
-                        href={{ query: { ...params, bedrooms: bedroomsParam === b ? undefined : b } }}
-                        className={`flex-grow h-10 flex items-center justify-center rounded-xl text-xs font-black transition-all border-2 ${
-                          bedroomsParam === b 
-                          ? "bg-primary-950 border-primary-950 text-white" 
-                          : "bg-white border-primary-50 text-primary-900 hover:border-primary-200"
-                        }`}
-                      >
-                        {b}+
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </div>
+        {/* Listings Grid */}
+        <main className="w-full">
+          {properties.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {properties.map((property) => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
             </div>
-          </aside>
-
-          {/* Listings Grid */}
-          <main className="flex-grow">
-            {properties.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {properties.map((property) => (
-                  <PropertyCard key={property.id} property={property} />
-                ))}
+          ) : (
+            <div className="bg-white rounded-[40px] border border-primary-100 p-20 text-center shadow-sm">
+              <div className="w-20 h-20 bg-primary-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-primary-200">
+                 <Search size={40} />
               </div>
-            ) : (
-              <div className="bg-white rounded-[40px] border border-primary-100 p-20 text-center shadow-sm">
-                <div className="w-20 h-20 bg-primary-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-primary-200">
-                   <Search size={40} />
-                </div>
-                <h3 className="text-2xl font-black text-primary-950 mb-2">
-                  {lang === 'en' ? "No properties match your criteria" : "ไม่พบรายการที่ตรงกับเงื่อนไข"}
-                </h3>
-                <p className="text-primary-900/60 font-medium mb-8">
-                  {lang === 'en' ? "Try adjusting your filters or search for something else." : "ลองปรับเปลี่ยนตัวกรอง หรือค้นหาด้วยคำอื่น"}
-                </p>
-                <Link href="/properties" className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-2xl font-black transition-all">
-                   {lang === 'en' ? "Show All" : "แสดงทั้งหมด"}
-                </Link>
-              </div>
-            )}
-          </main>
-        </div>
+              <h3 className="text-2xl font-black text-primary-950 mb-2">
+                {lang === 'en' ? "No properties match your criteria" : "ไม่พบรายการที่ตรงกับเงื่อนไข"}
+              </h3>
+              <p className="text-primary-900/60 font-medium mb-8">
+                {lang === 'en' ? "Try adjusting your filters or search for something else." : "ลองปรับเปลี่ยนตัวกรอง หรือค้นหาด้วยคำอื่น"}
+              </p>
+              <Link href="/properties" className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-2xl font-black transition-all">
+                 {lang === 'en' ? "Show All" : "แสดงทั้งหมด"}
+              </Link>
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );
