@@ -43,6 +43,13 @@ export default async function Home() {
     orderBy: { createdAt: 'desc' },
   });
 
+  // Fetch featured properties
+  const featuredProperties = await prisma.property.findMany({
+    where: { isFeatured: true },
+    take: 3,
+    orderBy: { createdAt: 'desc' },
+  });
+
   return (
     <div className="bg-background">
       {/* Hero Section */}
@@ -89,6 +96,35 @@ export default async function Home() {
           <HeroSearchBox />
         </div>
       </section>
+
+      {/* Recommended Properties */}
+      {featuredProperties.length > 0 && (
+        <section className="py-20 bg-primary-900 text-white overflow-hidden relative">
+          <div className="absolute top-0 right-0 p-20 opacity-10">
+            <Mountain size={400} />
+          </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-12">
+              <div>
+                <div className="inline-block px-4 py-1 bg-accent-500 text-white text-xs font-bold uppercase tracking-[0.2em] rounded-full mb-4">
+                  Selection
+                </div>
+                <h2 className="text-4xl font-bold mb-4">{t("home.featuredTitle")}</h2>
+                <p className="text-primary-100 max-w-2xl">{t("home.featuredSubtitle")}</p>
+              </div>
+              <Link href="/properties" className="text-accent-500 font-bold hover:text-white mt-4 md:mt-0 flex items-center gap-2 group transition-colors">
+                {t("navbar.all")} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredProperties.map(property => (
+                <PropertyCard key={property.id} property={property} isFeatured={true} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* For Rent Properties */}
       <section className="pt-4 pb-20 md:py-20">

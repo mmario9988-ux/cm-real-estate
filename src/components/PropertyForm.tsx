@@ -23,6 +23,7 @@ export default function PropertyForm({ initialData }: { initialData?: any }) {
   }
 
   const [uploadedImages, setUploadedImages] = useState<string[]>(initialImages);
+  const [isFeatured, setIsFeatured] = useState<boolean>(initialData?.isFeatured || false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,6 +54,7 @@ export default function PropertyForm({ initialData }: { initialData?: any }) {
       waterHeaterCount: formData.get("waterHeaterCount"),
       parkingCount: formData.get("parkingCount"),
       petsAllowed: formData.get("petsAllowed"),
+      isFeatured: isFeatured,
     };
 
     try {
@@ -153,6 +155,26 @@ export default function PropertyForm({ initialData }: { initialData?: any }) {
               <option value="Sold">🔴 ขายแล้ว (Sold)</option>
               <option value="Rented">🔵 เช่าแล้ว (Rented)</option>
             </select>
+          </div>
+
+          <div className="md:col-span-2 pt-4">
+            <label className="flex items-center gap-4 cursor-pointer group/toggle border-2 border-primary-100 rounded-3xl p-6 hover:border-accent-500 transition-all bg-primary-50/20">
+              <input 
+                type="checkbox" 
+                className="hidden" 
+                checked={isFeatured} 
+                onChange={() => setIsFeatured(!isFeatured)} 
+              />
+              <div className="flex-1">
+                <span className="text-lg font-bold text-primary-950 block">รายการแนะนำ (Recommended)</span>
+                <span className="text-sm text-primary-500 font-medium">แสดงอสังหาริมทรัพย์นี้ในส่วนรายการแนะนำที่หน้าแรก</span>
+              </div>
+              <div 
+                className={`relative w-16 h-8 rounded-full transition-all duration-300 ${isFeatured ? 'bg-accent-500' : 'bg-primary-200'}`}
+              >
+                <div className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full shadow-lg transition-transform duration-300 ${isFeatured ? 'translate-x-8' : 'translate-x-0'}`} />
+              </div>
+            </label>
           </div>
         </div>
       </section>

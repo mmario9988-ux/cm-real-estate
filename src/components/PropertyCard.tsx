@@ -19,9 +19,10 @@ type PropertyProps = {
     status: string;
     images: string; // JSON string
   };
+  isFeatured?: boolean;
 };
 
-export default function PropertyCard({ property }: PropertyProps) {
+export default function PropertyCard({ property, isFeatured }: PropertyProps) {
   const { t } = useLanguage();
   const { toggleFavorite, isFavorite } = useFavorites();
   const isFav = isFavorite(property.id);
@@ -61,9 +62,10 @@ export default function PropertyCard({ property }: PropertyProps) {
     <Link href={`/properties/${property.id}`} className="group block h-full" suppressHydrationWarning>
       <div suppressHydrationWarning className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-primary-100 flex flex-col h-full transform group-hover:-translate-y-1">
         <div className="relative h-64 2xl:h-72 w-full overflow-hidden">
-          {/* Status Badge */}
-          <div className="absolute top-4 left-4 z-10">
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold shadow-md ${
+          {/* Badges Container */}
+          <div className="absolute top-4 left-4 z-10 flex flex-col gap-2 items-start">
+            {/* Status Badge */}
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold shadow-md whitespace-nowrap ${
               property.status === 'For Sale' ? 'bg-amber-500 text-white' : 
               property.status === 'For Rent' ? 'bg-blue-500 text-white' : 
               property.status === 'Sold' ? 'bg-red-500 text-white' : 
@@ -72,6 +74,13 @@ export default function PropertyCard({ property }: PropertyProps) {
             }`}>
               {displayStatus}
             </span>
+
+            {/* Featured Badge */}
+            {isFeatured && (
+              <div className="bg-accent-500 text-white text-[10px] font-bold py-1 px-3 rounded-full text-center uppercase tracking-widest shadow-lg animate-pulse whitespace-nowrap">
+                Recommended
+              </div>
+            )}
           </div>
           
           {/* Type Badge */}

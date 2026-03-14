@@ -102,6 +102,11 @@ export default async function AdminPropertiesPage({ searchParams }: PageProps) {
                         }`}>
                           {property.status}
                         </span>
+                        {property.isFeatured && (
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-accent-500 text-white flex items-center gap-1 shadow-sm">
+                            ★ Recommended
+                          </span>
+                        )}
                         <span className="text-xs text-primary-600/50 font-bold">• {property.location}</span>
                       </div>
                     </div>

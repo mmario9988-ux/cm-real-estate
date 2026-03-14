@@ -43,6 +43,7 @@ export async function POST(req: Request) {
         waterHeaterCount: Number(body.waterHeaterCount) || 0,
         parkingCount: Number(body.parkingCount) || 0,
         petsAllowed: Number(body.petsAllowed) || 0,
+        isFeatured: Boolean(body.isFeatured),
       } 
     });
     return NextResponse.json(property, { status: 201 });

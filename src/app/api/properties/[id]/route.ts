@@ -47,6 +47,7 @@ export async function PUT(
       ...(body.waterHeaterCount !== undefined && { waterHeaterCount: Number(body.waterHeaterCount) }),
       ...(body.parkingCount !== undefined && { parkingCount: Number(body.parkingCount) }),
       ...(body.petsAllowed !== undefined && { petsAllowed: Number(body.petsAllowed) }),
+      ...(body.isFeatured !== undefined && { isFeatured: Boolean(body.isFeatured) }),
     };
 
     const property = await prisma.property.update({ 

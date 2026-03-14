@@ -80,6 +80,7 @@ model Property {
   waterHeaterCount Int      @default(0)
   viewCount        Int      @default(0)
   youtubeUrl       String?
+  isFeatured       Boolean  @default(false)
 }
 
 model Inquiry {
