@@ -26,10 +26,10 @@ export default function Footer() {
             </div>
 
             <div className="flex space-x-4 pt-4">
-              <a href="#" aria-label="Facebook" className="text-primary-200 hover:text-accent-500 transition-colors">
+              <a href="https://www.facebook.com/chiangmaihouse4rent" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-primary-200 hover:text-accent-500 transition-colors">
                 <Facebook size={20} />
               </a>
-              <a href="#" aria-label="Instagram" className="text-primary-200 hover:text-accent-500 transition-colors">
+              <a href="https://www.instagram.com/cmproperty89" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-primary-200 hover:text-accent-500 transition-colors">
                 <Instagram size={20} />
               </a>
             </div>
@@ -66,8 +66,8 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-primary-800/50 flex flex-col md:flex-row justify-between items-center text-primary-200/60 text-sm">
           <p>&copy; {new Date().getFullYear()} Chiang Mai Estates. {t("footer.rights")}</p>
           <div className="mt-4 md:mt-0 space-x-4">
-            <Link href="#" className="hover:text-primary-200 transition-colors">{t("footer.privacy")}</Link>
-            <Link href="#" className="hover:text-primary-200 transition-colors">{t("footer.terms")}</Link>
+            <Link href="/privacy" className="hover:text-primary-200 transition-colors">{t("footer.privacy")}</Link>
+            <Link href="/terms" className="hover:text-primary-200 transition-colors">{t("footer.terms")}</Link>
           </div>
         </div>
       </div>
