@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Save, MapPin, Sofa, Zap, Wind, Droplets, Car, PawPrint, Info, Ruler, Layout, ArrowLeft, Loader2, Banknote, Bed } from "lucide-react";
+import { Save, MapPin, Sofa, Zap, Wind, Droplets, Car, PawPrint, Info, Ruler, Layout, ArrowLeft, Loader2, Banknote, Bed, CheckCircle2, Plus } from "lucide-react";
 import Link from "next/link";
 import ImageUpload from "./ImageUpload";
 
 export default function PropertyForm({ initialData }: { initialData?: any }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const isEditing = !!initialData;
 
   // Parse initial images
@@ -69,8 +70,13 @@ export default function PropertyForm({ initialData }: { initialData?: any }) {
 
       if (!res.ok) throw new Error("Failed to save property");
       
-      router.push("/admin/properties");
-      router.refresh();
+      if (isEditing) {
+        router.push("/admin/properties");
+        router.refresh();
+      } else {
+        setIsSuccess(true);
+        setIsSubmitting(false);
+      }
     } catch (error) {
       alert("Error saving property");
       setIsSubmitting(false);
@@ -81,6 +87,43 @@ export default function PropertyForm({ initialData }: { initialData?: any }) {
   const labelClass = "text-xs font-bold uppercase tracking-wider text-primary-400 ml-1 mb-2 block";
   const sectionCardClass = "bg-white p-8 lg:p-10 rounded-[40px] border border-primary-100 shadow-sm space-y-8";
   const sectionTitleClass = "text-xl font-bold text-primary-950 flex items-center gap-3 mb-2";
+
+  if (isSuccess) {
+    return (
+      <div className="max-w-2xl mx-auto py-20 px-8">
+        <div className="bg-white rounded-[48px] border border-primary-100 shadow-2xl p-12 text-center animate-in fade-in zoom-in-95 duration-700">
+          <div className="flex justify-center mb-8">
+            <div className="w-24 h-24 bg-emerald-500 rounded-[32px] flex items-center justify-center text-white shadow-2xl shadow-emerald-500/20 rotate-12">
+              <CheckCircle2 size={48} strokeWidth={2.5} />
+            </div>
+          </div>
+          <h2 className="text-4xl font-black text-primary-950 mb-4 tracking-tight">ลงประกาศเรียบร้อย!</h2>
+          <p className="text-primary-500 font-bold text-lg mb-12">อสังหาริมทรัพย์ของคุณถูกเพิ่มเข้าไปในระบบแล้ว</p>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <button 
+              onClick={() => {
+                setIsSuccess(false);
+                setUploadedImages([]);
+                setIsFeatured(false);
+                // The form fields will be empty if we force a re-render or reset
+                window.location.reload();
+              }}
+              className="flex items-center justify-center gap-3 px-8 py-5 bg-primary-950 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-primary-800 transition-all shadow-xl shadow-primary-950/20 active:scale-95"
+            >
+              <Plus size={18} /> ลงประกาศเพิ่มอีก
+            </button>
+            <Link 
+              href="/admin/properties"
+              className="flex items-center justify-center gap-3 px-8 py-5 bg-white text-primary-900 border-2 border-primary-100 rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-primary-50 transition-all active:scale-95"
+            >
+              กลับหน้ารายการ
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="max-w-5xl mx-auto space-y-10 pb-20">

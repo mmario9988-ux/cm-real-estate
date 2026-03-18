@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { auth } from '@/auth';
 import { isAuthorizedAdmin } from '@/lib/auth-utils';
+import { corsResponse, corsOptions } from '@/lib/cors';
 
 export async function GET(
   req: Request, 
@@ -14,13 +15,17 @@ export async function GET(
     });
     
     if (!property) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+      return corsResponse({ error: "Not found" }, 404);
     }
     
-    return NextResponse.json(property);
+    return corsResponse(property);
   } catch(error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return corsResponse({ error: error.message }, 500);
   }
+}
+
+export async function OPTIONS() {
+  return corsOptions();
 }
 
 export async function PUT(
@@ -29,7 +34,7 @@ export async function PUT(
 ) {
   const session = await auth();
   if (!session?.user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return corsResponse({ error: "Unauthorized" }, 401);
   }
 
   try {
@@ -55,9 +60,9 @@ export async function PUT(
       data: updateData 
     });
     
-    return NextResponse.json(property);
+    return corsResponse(property);
   } catch(error: any) {
-    return NextResponse.json({ error: error.message || "Failed to update property" }, { status: 500 });
+    return corsResponse({ error: error.message || "Failed to update property" }, 500);
   }
 }
 
@@ -67,7 +72,7 @@ export async function DELETE(
 ) {
   const session = await auth();
   if (!session?.user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return corsResponse({ error: "Unauthorized" }, 401);
   }
 
   try {
@@ -75,8 +80,8 @@ export async function DELETE(
     await prisma.property.delete({ 
       where: { id: resolvedParams.id } 
     });
-    return NextResponse.json({ success: true });
+    return corsResponse({ success: true });
   } catch(error: any) {
-    return NextResponse.json({ error: error.message || "Failed to delete property" }, { status: 500 });
+    return corsResponse({ error: error.message || "Failed to delete property" }, 500);
   }
 }

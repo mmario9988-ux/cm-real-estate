@@ -4,12 +4,51 @@ import { CldUploadWidget } from "next-cloudinary";
 import { ImagePlus, X, ImageIcon, Loader2 } from "lucide-react";
 import Image from "next/image";
 
+import { useState } from "react";
+
 interface BlogImageUploadProps {
   value: string;
   onChange: (url: string) => void;
 }
 
 export default function BlogImageUpload({ value, onChange }: BlogImageUploadProps) {
+  const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const uploadFile = async (file: File) => {
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "cm_real_estate");
+
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/dcsnbthca/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.secure_url) {
+        onChange(data.secure_url);
+      }
+    } catch (error) {
+      console.error("Blog Drag Upload Error:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const onDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      await uploadFile(file);
+    }
+  };
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -38,7 +77,7 @@ export default function BlogImageUpload({ value, onChange }: BlogImageUploadProp
           />
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
             <CldUploadWidget
-              uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+              uploadPreset="cm_real_estate"
               onSuccess={(result: any) => {
                 if (result?.info?.secure_url) {
                   onChange(result.info.secure_url);
@@ -47,15 +86,22 @@ export default function BlogImageUpload({ value, onChange }: BlogImageUploadProp
               options={{
                 maxFiles: 1,
                 resourceType: "image",
+                clientAllowedFormats: ["jpg", "png", "webp", "jpeg"],
               }}
             >
               {({ open }) => (
                 <button
                   type="button"
                   onClick={() => open()}
-                  className="bg-white/90 hover:bg-white text-gray-900 px-4 py-2 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2 transition-all active:scale-95"
+                  onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={onDrop}
+                  className={`bg-white/90 hover:bg-white text-gray-900 px-4 py-2 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2 transition-all active:scale-95 ${
+                    isDragging ? "ring-4 ring-primary-500 ring-offset-2" : ""
+                  }`}
                 >
-                  <ImagePlus size={18} /> เปลี่ยนรูปภาพ
+                  {isUploading ? <Loader2 size={18} className="animate-spin" /> : <ImagePlus size={18} />}
+                  {isDragging ? "วางรูปที่นี่" : "เปลี่ยนรูปภาพ"}
                 </button>
               )}
             </CldUploadWidget>
@@ -63,7 +109,7 @@ export default function BlogImageUpload({ value, onChange }: BlogImageUploadProp
         </div>
       ) : (
         <CldUploadWidget
-          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+          uploadPreset="cm_real_estate"
           onSuccess={(result: any) => {
             if (result?.info?.secure_url) {
               onChange(result.info.secure_url);
@@ -72,6 +118,7 @@ export default function BlogImageUpload({ value, onChange }: BlogImageUploadProp
           options={{
             maxFiles: 1,
             resourceType: "image",
+            clientAllowedFormats: ["jpg", "png", "webp", "jpeg"],
             styles: {
               palette: {
                 window: "#FFFFFF",
@@ -89,13 +136,24 @@ export default function BlogImageUpload({ value, onChange }: BlogImageUploadProp
             <button
               type="button"
               onClick={() => open()}
-              className="w-full bg-gray-50 border-2 border-dashed border-gray-200 hover:border-primary-500 hover:bg-gray-100 rounded-2xl p-12 flex flex-col items-center gap-4 transition-all group"
+              onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={onDrop}
+              className={`w-full border-2 border-dashed rounded-2xl p-12 flex flex-col items-center gap-4 transition-all group ${
+                isDragging 
+                  ? "bg-primary-600/5 border-primary-600 ring-4 ring-primary-600/5" 
+                  : "bg-gray-50 border-gray-200 hover:border-primary-500 hover:bg-gray-100"
+              }`}
             >
-              <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-gray-300 group-hover:text-primary-600 transition-colors border border-gray-100">
-                <ImagePlus size={32} />
+              <div className={`w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center transition-colors border border-gray-100 ${
+                isDragging ? "text-primary-600" : "text-gray-300 group-hover:text-primary-600"
+              }`}>
+                {isUploading ? <Loader2 size={32} className="animate-spin" /> : <ImagePlus size={32} />}
               </div>
               <div className="text-center">
-                <p className="text-sm font-bold text-gray-900">คลิกเพื่ออัปโหลดรูปภาพ</p>
+                <p className={`text-sm font-bold transition-colors ${isDragging ? "text-primary-600" : "text-gray-900"}`}>
+                  {isDragging ? "วางรูปเพื่ออัปโหลด" : "คลิกหรือลากรูปมาวางเพื่ออัปโหลด"}
+                </p>
                 <p className="text-xs text-gray-500 mt-1">แนะนำขนาด 16:9 หรือ 1200x675px</p>
               </div>
             </button>

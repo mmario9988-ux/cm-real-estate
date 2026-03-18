@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Send } from "lucide-react";
+import { Send, CheckCircle2, Loader2 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function InquiryForm({ propertyId, propertyTitle }: { propertyId?: string, propertyTitle?: string }) {
@@ -42,14 +42,23 @@ export default function InquiryForm({ propertyId, propertyTitle }: { propertyId?
 
   if (status === "success") {
     return (
-      <div className="bg-primary-50 border border-primary-200 text-primary-800 p-6 rounded-2xl text-center">
-        <h4 className="text-lg font-bold mb-2">{t("inquiry.successTitle")}</h4>
-        <p className="text-sm opacity-80">{t("inquiry.successMessage")}</p>
+      <div className="bg-white border border-primary-100 p-10 rounded-[32px] text-center shadow-sm animate-in fade-in zoom-in-95 duration-500">
+        <div className="flex justify-center mb-6">
+          <div className="w-20 h-20 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 rotate-6">
+            <CheckCircle2 size={40} strokeWidth={2.5} />
+          </div>
+        </div>
+        <h4 className="text-2xl font-black text-primary-950 mb-2 tracking-tight">
+          {t("inquiry.successTitle") || "ส่งข้อมูลเรียบร้อย!"}
+        </h4>
+        <p className="text-primary-500 font-bold text-sm mb-8 leading-relaxed max-w-[240px] mx-auto">
+          {t("inquiry.successMessage") || "เจ้าหน้าที่จะติดต่อกลับหาคุณโดยเร็วที่สุด"}
+        </p>
         <button 
           onClick={() => setStatus("idle")}
-          className="mt-6 text-sm font-semibold text-primary-600 hover:text-primary-700 underline"
+          className="w-full py-4 bg-primary-950 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-primary-800 transition-all shadow-xl shadow-primary-950/20 active:scale-95"
         >
-          {t("inquiry.sendAnother")}
+          {t("inquiry.sendAnother") || "ส่งข้อความอื่นเพิ่มเติม"}
         </button>
       </div>
     );
@@ -117,10 +126,15 @@ export default function InquiryForm({ propertyId, propertyTitle }: { propertyId?
       <button 
         type="submit" 
         disabled={status === "loading"}
-        className="w-full bg-accent-500 hover:bg-accent-600 text-white font-bold py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-md shadow-accent-500/20"
+        className="w-full bg-accent-500 hover:bg-accent-600 text-white font-black py-4 px-4 rounded-xl transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed shadow-xl shadow-accent-500/20 active:scale-95 uppercase tracking-widest text-[10px]"
       >
-        {status === "loading" ? t("inquiry.sending") : (
-          <>{t("inquiry.send")} <Send size={18} /></>
+        {status === "loading" ? (
+          <>
+            <Loader2 size={18} className="animate-spin" />
+            {t("inquiry.sending") || "กำลังส่ง..."}
+          </>
+        ) : (
+          <>{t("inquiry.send") || "ส่งข้อมูล"} <Send size={18} /></>
         )}
       </button>
     </form>

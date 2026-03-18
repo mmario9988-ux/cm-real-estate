@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { auth } from '@/auth';
 import { Resend } from 'resend';
+import { corsResponse, corsOptions } from '@/lib/cors';
+import { isAuthorizedAdmin } from '@/lib/auth-utils';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -172,18 +174,28 @@ ${message}
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const adminEmail = req.headers.get('x-admin-email');
+  
+  // Authorize via session or mobile x-admin-email header
+  const isAuthorized = isAuthorizedAdmin(session) || 
+                       (adminEmail && isAuthorizedAdmin({ user: { email: adminEmail.trim() } }));
+
+  if (!isAuthorized) {
+    return corsResponse({ error: "Unauthorized" }, 401);
   }
   
   try {
     const inquiries = await prisma.inquiry.findMany({ 
       orderBy: { createdAt: 'desc' } 
     });
-    return NextResponse.json(inquiries);
+    return corsResponse(inquiries);
   } catch(error: any) {
-    return NextResponse.json({ error: error.message || "Failed to fetch inquiries" }, { status: 500 });
+    return corsResponse({ error: error.message || "Failed to fetch inquiries" }, 500);
   }
+}
+
+export async function OPTIONS() {
+  return corsOptions();
 }

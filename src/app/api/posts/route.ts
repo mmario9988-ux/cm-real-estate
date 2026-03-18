@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
 import { isAuthorizedAdmin } from "@/lib/auth-utils";
+import { corsResponse, corsOptions } from "@/lib/cors";
 
 export async function GET(request: Request) {
   try {
@@ -13,11 +14,15 @@ export async function GET(request: Request) {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(posts);
+    return corsResponse(posts);
   } catch (error) {
     console.error("Failed to fetch posts:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return corsResponse({ error: "Internal Server Error" }, 500);
   }
+}
+
+export async function OPTIONS() {
+  return corsOptions();
 }
 
 export async function POST(request: Request) {

@@ -2,22 +2,69 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { auth } from '@/auth';
 import { isAuthorizedAdmin } from '@/lib/auth-utils';
+import { broadcastNewProperty } from '@/lib/notifications';
+import { corsResponse, corsOptions } from '@/lib/cors';
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const q = searchParams.get('q');
+    const status = searchParams.get('status');
+    const type = searchParams.get('type');
+    const location = searchParams.get('location');
+    const minPrice = searchParams.get('minPrice');
+    const maxPrice = searchParams.get('maxPrice');
+    const bedrooms = searchParams.get('bedrooms');
+
+    const where: any = {};
+
+    if (status) where.status = status;
+    if (type) where.type = type;
+    if (location) {
+      where.location = { contains: location, mode: 'insensitive' };
+    }
+
+    if (minPrice || maxPrice) {
+      where.price = {};
+      if (minPrice) where.price.gte = Number(minPrice);
+      if (maxPrice) where.price.lte = Number(maxPrice);
+    }
+
+    if (bedrooms) {
+      where.bedrooms = { gte: Number(bedrooms) };
+    }
+
+    if (q) {
+      where.OR = [
+        { title: { contains: q, mode: 'insensitive' } },
+        { description: { contains: q, mode: 'insensitive' } },
+        { location: { contains: q, mode: 'insensitive' } },
+      ];
+    }
+
     const properties = await prisma.property.findMany({ 
+      where,
       orderBy: { createdAt: 'desc' } 
     });
-    return NextResponse.json(properties);
+    return corsResponse(properties);
   } catch(error: any) {
-    return NextResponse.json({ error: error.message || "Failed to fetch properties" }, { status: 500 });
+    return corsResponse({ error: error.message || "Failed to fetch properties" }, 500);
   }
+}
+
+export async function OPTIONS() {
+  return corsOptions();
 }
 
 export async function POST(req: Request) {
   const session = await auth();
-  if (!isAuthorizedAdmin(session)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const adminEmail = req.headers.get('x-admin-email');
+  
+  const isAuthorized = isAuthorizedAdmin(session) || 
+                       (adminEmail && isAuthorizedAdmin({ user: { email: adminEmail.trim() } }));
+
+  if (!isAuthorized) {
+    return corsResponse({ error: "Unauthorized" }, 401);
   }
 
   try {
@@ -43,11 +90,17 @@ export async function POST(req: Request) {
         waterHeaterCount: Number(body.waterHeaterCount) || 0,
         parkingCount: Number(body.parkingCount) || 0,
         petsAllowed: Number(body.petsAllowed) || 0,
+        lat: body.lat ? Number(body.lat) : null,
+        lng: body.lng ? Number(body.lng) : null,
         isFeatured: Boolean(body.isFeatured),
       } 
     });
-    return NextResponse.json(property, { status: 201 });
+
+    // Trigger Mobile Push Notifications
+    await broadcastNewProperty(property);
+
+    return corsResponse(property, 201);
   } catch(error: any) {
-    return NextResponse.json({ error: error.message || "Failed to create property" }, { status: 500 });
+    return corsResponse({ error: error.message || "Failed to create property" }, 500);
   }
 }

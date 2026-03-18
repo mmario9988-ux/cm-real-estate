@@ -10,12 +10,16 @@ export const proxy = auth((req) => {
   const isAdminPath = pathname.startsWith("/admin");
   const isApiAdminPath = pathname.startsWith("/api/admin");
 
-  if (isAdminPath || isApiAdminPath) {
-    if (!req.auth) {
+  // Allow OPTIONS requests (CORS preflight) to skip security checks
+  if ((isAdminPath || isApiAdminPath) && req.method !== 'OPTIONS') {
+    const adminEmail = req.headers.get('x-admin-email');
+    const isMobileAuthorized = adminEmail && isAuthorizedAdmin({ user: { email: adminEmail } });
+
+    if (!req.auth && !isMobileAuthorized) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
     
-    if (!isAuthorizedAdmin(req.auth)) {
+    if (req.auth && !isAuthorizedAdmin(req.auth)) {
       return NextResponse.redirect(new URL("/", req.url));
     }
   }

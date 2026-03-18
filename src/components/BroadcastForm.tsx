@@ -11,6 +11,43 @@ export default function BroadcastForm() {
   const [imageUrl, setImageUrl] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [feedback, setFeedback] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
+
+  const uploadFile = async (file: File) => {
+    setStatus("loading");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "cm_real_estate");
+
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/dcsnbthca/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.secure_url) {
+        setImageUrl(data.secure_url);
+        setStatus("idle");
+      }
+    } catch (error) {
+      console.error("Broadcast Drag Upload Error:", error);
+      setStatus("error");
+      setFeedback("ไม่สามารถอัปโหลดรูปภาพได้");
+    }
+  };
+
+  const onDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      await uploadFile(file);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,20 +97,33 @@ export default function BroadcastForm() {
 
       <div className="p-8">
         {status === "success" ? (
-          <div className="flex flex-col items-center justify-center py-10 gap-4 animate-in zoom-in-95 duration-500">
-            <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500">
-              <CheckCircle2 size={48} />
+          <div className="flex flex-col items-center justify-center py-16 gap-6 animate-in fade-in zoom-in-95 duration-700 ease-out">
+            <div className="relative">
+              <div className="absolute inset-0 bg-emerald-400/20 blur-3xl rounded-full scale-150 animate-pulse" />
+              <div className="relative w-24 h-24 bg-emerald-500 rounded-[32px] flex items-center justify-center text-white shadow-2xl shadow-emerald-500/30 rotate-12 hover:rotate-0 transition-transform duration-500">
+                <CheckCircle2 size={48} strokeWidth={2.5} />
+              </div>
             </div>
-            <div className="text-center">
-              <p className="text-xl font-bold text-primary-950 mb-1">ส่งข่าวสารเรียบร้อย!</p>
-              <p className="text-primary-600 font-medium">{feedback}</p>
+            
+            <div className="text-center space-y-2">
+              <p className="text-3xl font-black text-primary-950 tracking-tight">ส่งข่าวสารเรียบร้อย!</p>
+              <p className="text-primary-500 font-bold max-w-sm mx-auto">{feedback}</p>
             </div>
-            <button 
-              onClick={() => setStatus("idle")}
-              className="mt-4 px-8 py-3 bg-primary-50 text-primary-600 rounded-xl font-bold hover:bg-primary-100 transition-colors"
-            >
-              ส่งข้อความใหม่
-            </button>
+
+            <div className="flex flex-col sm:flex-row gap-4 mt-4 w-full max-w-sm px-6">
+              <button 
+                onClick={() => setStatus("idle")}
+                className="flex-1 px-8 py-4 bg-primary-950 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-primary-800 transition-all shadow-xl shadow-primary-950/20 active:scale-95"
+              >
+                ส่งข้อความใหม่
+              </button>
+              <button 
+                onClick={() => window.location.reload()}
+                className="flex-1 px-8 py-4 bg-white text-primary-400 border border-primary-100 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-primary-50 hover:text-primary-950 transition-all active:scale-95"
+              >
+                เสร็จสิ้น
+              </button>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -119,7 +169,7 @@ export default function BroadcastForm() {
                 </div>
               ) : (
                 <CldUploadWidget
-                  uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+                  uploadPreset="cm_real_estate"
                   onSuccess={(result: any) => {
                     if (result?.info?.secure_url) {
                       setImageUrl(result.info.secure_url);
@@ -128,6 +178,7 @@ export default function BroadcastForm() {
                   options={{
                     maxFiles: 1,
                     resourceType: "image",
+                    clientAllowedFormats: ["jpg", "png", "webp", "jpeg"],
                     styles: {
                       palette: {
                         window: "#FFFFFF",
@@ -145,13 +196,24 @@ export default function BroadcastForm() {
                     <button
                       type="button"
                       onClick={() => open()}
-                      className="w-full max-w-md bg-primary-50/50 border-2 border-dashed border-primary-100 hover:border-primary-500 hover:bg-white rounded-2xl p-8 flex flex-col items-center gap-3 transition-all group"
+                      onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                      onDragLeave={() => setIsDragging(false)}
+                      onDrop={onDrop}
+                      className={`w-full max-w-md border-2 border-dashed rounded-2xl p-8 flex flex-col items-center gap-3 transition-all group ${
+                        isDragging 
+                          ? "bg-primary-600/5 border-primary-600 ring-4 ring-primary-600/5" 
+                          : "bg-primary-50/50 border-primary-100 hover:border-primary-500 hover:bg-white"
+                      }`}
                     >
-                      <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-primary-200 group-hover:text-primary-600 transition-colors">
-                        <ImagePlus size={24} />
+                      <div className={`w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center transition-colors ${
+                        isDragging ? "text-primary-600" : "text-primary-200 group-hover:text-primary-600"
+                      }`}>
+                        {status === "loading" ? <Loader2 size={24} className="animate-spin" /> : <ImagePlus size={24} />}
                       </div>
-                      <p className="text-xs font-bold text-primary-400 group-hover:text-primary-600 transition-colors uppercase tracking-widest">
-                        คลิกเพื่ออัปโหลดรูปภาพ
+                      <p className={`text-xs font-bold transition-colors uppercase tracking-widest ${
+                        isDragging ? "text-primary-600" : "text-primary-400 group-hover:text-primary-600"
+                      }`}>
+                        {isDragging ? "วางรูปเพื่ออัปโหลด" : "คลิกหรือลากรูปมาวางเพื่ออัปโหลด"}
                       </p>
                     </button>
                   )}
